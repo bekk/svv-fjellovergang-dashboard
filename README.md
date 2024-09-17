@@ -44,3 +44,14 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
+# Setup project
+
+## Environment Variables
+Lag en `.env` fil i root mappen din. Dette er en fil for å lagre environment variabler som er personlige for deg. 
+
+REACT_APP_MAPBOX_ACCESS_TOKEN = "_Din Mapbox Acces Token_"
+
+Lag deg en bruker hos Mapbox og lag en access token. Legg den inn i `.env` filen. 
