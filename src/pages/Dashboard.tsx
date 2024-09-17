@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { parse } from 'csv-parse/browser/esm/sync';
-
+import React, { useEffect, useState } from "react";
+import { parse } from "csv-parse/browser/esm/sync";
+import LinePlot from "../components/LinePlot";
+import DotPlot from "../components/DotPlot";
 
 type Predictions = {
   date: string;
@@ -14,26 +15,33 @@ function Dashboard() {
 
   useEffect(() => {
     // Fetch the CSV file from the public folder
-    fetch('/data/lstm_predictions.csv')
-      .then(response => response.text())
-      .then(fileContent => {
-        const headers = ['date', 'true_label', 'prediction_confidence', 'prediction'];
+    fetch("/data/lstm_predictions.csv")
+      .then((response) => response.text())
+      .then((fileContent) => {
+        const headers = [
+          "date",
+          "true_label",
+          "prediction_confidence",
+          "prediction",
+        ];
 
         // Parse the CSV content
         const result: Predictions[] = parse(fileContent, {
-          delimiter: ',',
+          delimiter: ",",
           columns: headers,
-          skip_empty_lines: true
+          skip_empty_lines: true,
         });
 
         setPredictions(result);
-        console.log(predictions)
+        console.log(predictions);
       })
-      .catch(error => console.error('Error loading the CSV file:', error));
+      .catch((error) => console.error("Error loading the CSV file:", error));
   }, []);
-  
+
   return (
     <div className="App">
+      <DotPlot />
+      <LinePlot />
       <table>
         <tr>
           <th>date</th>
@@ -41,14 +49,14 @@ function Dashboard() {
           <th>prediction_confidence</th>
           <th>prediction</th>
         </tr>
-          { predictions.map(prediction => (
+        {predictions.map((prediction) => (
           <tr>
-              <td>{prediction.date}</td>
-              <td>{prediction.true_label}</td>
-              <td>{prediction.prediction_confidence}</td>
-              <td>{prediction.prediction}</td>
-          </tr>  
-          ))} 
+            <td>{prediction.date}</td>
+            <td>{prediction.true_label}</td>
+            <td>{prediction.prediction_confidence}</td>
+            <td>{prediction.prediction}</td>
+          </tr>
+        ))}
       </table>
     </div>
   );
