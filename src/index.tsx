@@ -1,18 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter} from 'react-router-dom'
+import App from './App';
+import MapPage from './pages/MapPage';
 
 
 const router = createBrowserRouter([
-  {element: <App />,
+  {
+    element: <App />,
     path: "/",
     loader: async () => {
       return null;
     }
-
+  },
+  {
+    element: <MapPage />,
+    path: "kart",
+    loader: async () => {
+      return null;
+    }
   }
 ])
 
