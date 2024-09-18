@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { parse } from "csv-parse/browser/esm/sync";
 import LinePlot from "../components/LinePlot";
 import DotPlot from "../components/DotPlot";
+import ZoomPlot from "../components/ZoomPlot";
 
-type Predictions = {
+export type Predictions = {
   date: string;
-  true_label: boolean;
+  true_label: number;
   prediction_confidence: number;
-  prediction: boolean;
+  prediction: number;
 };
 
 function Dashboard() {
@@ -40,7 +41,8 @@ function Dashboard() {
 
   return (
     <div className="App">
-      <DotPlot />
+      <ZoomPlot data={predictions} />
+      <DotPlot data={predictions} />
       <LinePlot />
       <table>
         <tr>
@@ -51,7 +53,7 @@ function Dashboard() {
         </tr>
         {predictions.map((prediction) => (
           <tr>
-            <td>{prediction.date}</td>
+            <td>{prediction.date.toString()}</td>
             <td>{prediction.true_label}</td>
             <td>{prediction.prediction_confidence}</td>
             <td>{prediction.prediction}</td>
