@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { Predictions } from "../pages/Dashboard";
+import { Predictions } from "../../pages/Dashboard";
 
 interface DotPlotProps {
   data: Predictions[];

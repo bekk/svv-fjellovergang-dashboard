@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { parse } from "csv-parse/browser/esm/sync";
-import LinePlot from "../components/LinePlot";
-import DotPlot from "../components/DotPlot";
-import ZoomPlot from "../components/ZoomPlot";
+import DotPlot from "../components/plots/DotPlot";
+import ZoomPlot from "../components/plots/ZoomPlot";
 
 export type Predictions = {
   date: string;
@@ -43,7 +42,6 @@ function Dashboard() {
     <div className="App">
       <ZoomPlot data={predictions} />
       <DotPlot data={predictions} />
-      <LinePlot />
       <table>
         <tr>
           <th>date</th>
