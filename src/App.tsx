@@ -1,14 +1,10 @@
-import React from 'react';
-import './App.css';
-import Dashboard from './pages/Dashboard';
-
-
+import "./App.css";
+import MapPage from "./pages/MapPage";
 
 function App() {
-  
   return (
     <div className="App">
-      <Dashboard />
+      <MapPage />
     </div>
   );
 }

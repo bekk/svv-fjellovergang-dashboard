@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { Predictions } from "../pages/Dashboard";
+import { Predictions } from "../../pages/Dashboard";
 
 interface ZoomPlotProps {
   data: Predictions[];
