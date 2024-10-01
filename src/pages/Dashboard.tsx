@@ -2,6 +2,20 @@ import React, { useEffect, useState } from "react";
 import { parse } from "csv-parse/browser/esm/sync";
 import DotPlot from "../components/plots/DotPlot";
 import ZoomPlot from "../components/plots/ZoomPlot";
+import { BarChart, axisClasses } from "@mui/x-charts";
+
+const COLORS = {
+  green: "#52b202",
+  yellow: "#ffc60d",
+  red: "#ff290d",
+};
+const mockData = [
+  { day: "Mandag", percentage: 80 },
+  { day: "Tirsdag", percentage: 50 },
+  { day: "Onsdag", percentage: 65 },
+  { day: "Torsdag", percentage: 90 },
+  { day: "Fredag", percentage: 21 },
+];
 
 export type Predictions = {
   date: string;
@@ -42,6 +56,32 @@ function Dashboard() {
     <div className="App">
       <ZoomPlot data={predictions} />
       <DotPlot data={predictions} />
+      <BarChart
+        dataset={mockData}
+        xAxis={[{ scaleType: "band", dataKey: "day" }]}
+        series={[
+          {
+            dataKey: "percentage",
+          },
+        ]}
+        yAxis={[
+          {
+            label: "Percentage",
+            colorMap: {
+              type: "piecewise",
+              thresholds: [30, 69],
+              colors: [COLORS.red, COLORS.yellow, COLORS.green],
+            },
+          },
+        ]}
+        width={350}
+        height={300}
+        sx={{
+          [`.${axisClasses.left} .${axisClasses.label}`]: {
+            transform: "translate(-20px, 0)",
+          },
+        }}
+      ></BarChart>
       <table>
         <tr>
           <th>date</th>
