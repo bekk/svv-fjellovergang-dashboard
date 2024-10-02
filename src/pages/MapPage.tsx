@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Switch, Typography, IconButton } from "@mui/material";
@@ -11,6 +11,8 @@ import jsonData from "../fjelloverganger.json";
 import MountainPassCard from "../components/MountainPassCard";
 import { MountainPassData } from "../utils/mountainPassTypes";
 import CameraCard from "../components/CameraCard";
+import { fetchPrediction } from "../api/api";
+import { predictions } from "../utils/PredictionTypes";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -35,12 +37,13 @@ const initialViewState: ViewState = {
 };
 
 function MapPage() {
+  const [prediction, setPrediction] = useState<predictions[]>([]);
+
   const [showAll, setShowAll] = useState<boolean>(true);
   const [mountainPass, setMountainPass] = useState<MountainPassData | null>(
     null
   );
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
-
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -95,6 +98,20 @@ function MapPage() {
       setCoordinates(null);
     }
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const result = await fetchPrediction();
+        setPrediction(result.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getData();
+    console.log(prediction);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
