@@ -110,7 +110,6 @@ function MapPage() {
     };
 
     getData();
-    console.log(prediction);
   }, []);
 
   return (

@@ -3,6 +3,7 @@ import { KeyboardArrowRight, Circle } from "@mui/icons-material";
 import { MountainPassData } from "../utils/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import CardStats from "./CardStats";
+import { predictions } from "../utils/PredictionTypes";
 
 function MountainPassCard({
   data,

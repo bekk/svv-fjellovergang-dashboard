@@ -1,5 +1,5 @@
 export type predictions = {
   datetime: string;
-  prediction: string;
+  prediction: number;
   prediction_time: string;
 };
