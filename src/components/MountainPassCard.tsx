@@ -48,7 +48,7 @@ function MountainPassCard({
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Chip
             label={
-              data.properties.vegkategori + "." + data.properties.vegnummer
+              data.properties.veiKategori + "." + data.properties.veiNummer
             }
           />
           <Chip
@@ -63,12 +63,10 @@ function MountainPassCard({
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
         <Box sx={{ padding: 1, marginTop: 1 }}>
           <Typography variant="body2">
-            Fra: {data.properties.stedfesting.fra} -{" "}
-            {data.properties.stedfesting.lokaltFra}
+            Fra: {data.properties.fra} - {data.properties.lokaltFra}
           </Typography>
           <Typography variant="body2">
-            Til: {data.properties.stedfesting.til} -{" "}
-            {data.properties.stedfesting.lokaltTil}
+            Til: {data.properties.til} - {data.properties.lokaltTil}
           </Typography>
         </Box>
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />

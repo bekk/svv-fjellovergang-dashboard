@@ -9,19 +9,36 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import jsonData from "../fjelloverganger.json";
 import MountainPassCard from "../components/MountainPassCard";
-import { MountainPassData } from "../utils/mountainPassTypes";
+import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
 import CameraCard from "../components/CameraCard";
-import { fetchPrediction } from "../api/api";
+import { fetchAllMountainPasses, fetchPrediction } from "../api/api";
 import { predictions } from "../utils/PredictionTypes";
+import wellknown, { GeoJSONGeometryOrNull } from "wellknown";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
-const buildIndividualGeoJson = (data: any) => {
-  return data.features.map((feature: any) => {
+const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
+  return data.map((feature: any) => {
+    console.log("HER MAPPER jeg ");
+    console.log(feature);
     const individualGeoJSON: MountainPassData = {
       type: "Feature",
-      geometry: feature.geometry,
-      properties: feature.properties,
+      geometry: wellknown.parse(feature.wkt),
+      properties: {
+        id: feature.id,
+        navn: feature.navn,
+        overgangsType: feature.overgangstype,
+        antallFylker: feature.antallFylker,
+        veiKategori: feature.veiKategori,
+        veiNummer: feature.veiNummer,
+        strekningsType: feature.strekningsType,
+        fra: feature.fra,
+        til: feature.til,
+        lokaltFra: feature.lokaltFra,
+        lokaltTil: feature.lokaltTil,
+        senter: feature.senter, // Assuming `senter` is a Point that fits the expected structure
+        wkt: feature.wkt, // Keep the WKT in the properties if necessary
+      } as MountainPassType,
     };
     return individualGeoJSON;
   });
@@ -38,6 +55,10 @@ const initialViewState: ViewState = {
 
 function MapPage() {
   const [prediction, setPrediction] = useState<predictions[]>([]);
+  const [individualGeojsons, setIndividualGeojsons] = useState<
+    MountainPassData[]
+  >([]);
+  const [listenMinJa, setListenMinJa] = useState<MountainPassData[]>([]);
 
   const [showAll, setShowAll] = useState<boolean>(true);
   const [mountainPass, setMountainPass] = useState<MountainPassData | null>(
@@ -60,14 +81,11 @@ function MapPage() {
 
   const mapRef = useRef<any>(null);
 
-  const individualGeoJSONs: MountainPassData[] =
-    buildIndividualGeoJson(jsonData);
-
   const handleClick = (id: number, open: boolean, index: number) => {
     setActiveCardIndex((prevIndex) => (prevIndex === index ? null : index));
 
     if (open) {
-      const foundPass = individualGeoJSONs.find(
+      const foundPass = individualGeojsons.find(
         (pass) => pass.properties.id === id
       );
       if (foundPass) {
@@ -104,14 +122,33 @@ function MapPage() {
       try {
         const result = await fetchPrediction();
         setPrediction(result.data);
+
+        const pass = await fetchAllMountainPasses();
+        console.log("PASS:DATA:");
+        console.log(pass.data);
+        setIndividualGeojsons(buildIndividualGeoJson(pass.data));
+        const resultatJa: MountainPassData[] = buildIndividualGeoJson(
+          pass.data
+        );
+        setListenMinJa(resultatJa);
+        console.log("LISTE FAKTISK:DATA:");
+        console.log(resultatJa);
+        console.log(listenMinJa);
+        console.log(individualGeojsons);
       } catch (error) {
+        console.log("ERROR");
         console.log(error);
       }
     };
 
     getData();
-    console.log(prediction);
   }, []);
+
+  useEffect(() => {
+    if (individualGeojsons.length > 0) {
+      console.log("Oppdatert individualGeoJSONs:", individualGeojsons);
+    }
+  }, [individualGeojsons]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -144,19 +181,20 @@ function MapPage() {
           </section>
 
           <div style={{ maxHeight: "100%", overflowY: "auto" }}>
-            {individualGeoJSONs.map((mountainPassData: MountainPassData) => (
-              <div
-                key={mountainPassData.properties.id}
-                style={{ marginBottom: "10px" }}
-              >
-                <MountainPassCard
-                  data={mountainPassData}
-                  handleClick={handleClick}
-                  index={mountainPassData.properties.id}
-                  openIndex={activeCardIndex}
-                />
-              </div>
-            ))}
+            {individualGeojsons.length > 0 &&
+              listenMinJa.map((mountainPassData: MountainPassData) => (
+                <div
+                  key={mountainPassData.properties.id}
+                  style={{ marginBottom: "10px" }}
+                >
+                  <MountainPassCard
+                    data={mountainPassData}
+                    handleClick={handleClick}
+                    index={mountainPassData.properties.id}
+                    openIndex={activeCardIndex}
+                  />
+                </div>
+              ))}
           </div>
         </div>
         <div style={{ flex: "3", height: "100%", width: "100%" }}>
@@ -167,8 +205,8 @@ function MapPage() {
             mapboxAccessToken={MAPBOX_TOKEN}
             onMove={(e) => setViewState(e.viewState)}
           >
-            {showAll ? (
-              individualGeoJSONs.map((mountainPassData: MountainPassData) => (
+            {individualGeojsons.length > 0 && showAll ? (
+              listenMinJa.map((mountainPassData: MountainPassData) => (
                 <div key={mountainPassData.properties.id}>
                   <Source
                     id={mountainPassData.properties.id}
@@ -193,7 +231,7 @@ function MapPage() {
                       type="line"
                       layout={{ "line-cap": "round", "line-join": "round" }}
                       paint={
-                        mountainPassData.properties.strekningstype ===
+                        mountainPassData.properties.strekningsType ===
                         "Fjellovergang"
                           ? { "line-color": "#FF9999", "line-width": 2 }
                           : { "line-color": "#99CCFF", "line-width": 2 }
@@ -217,7 +255,7 @@ function MapPage() {
                     type="line"
                     layout={{ "line-cap": "round", "line-join": "round" }}
                     paint={
-                      mountainPass.properties.strekningstype === "Fjellovergang"
+                      mountainPass.properties.strekningsType === "Fjellovergang"
                         ? { "line-color": "#FF9999", "line-width": 2 }
                         : { "line-color": "#99CCFF", "line-width": 2 }
                     }
