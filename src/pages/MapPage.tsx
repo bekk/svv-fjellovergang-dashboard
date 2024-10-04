@@ -60,6 +60,9 @@ function MapPage() {
   const [mountainPass, setMountainPass] = useState<MountainPassData | null>(
     null
   );
+
+  const [loadingFjelloverganger, setLoadingFjelloverganger] =
+    useState<boolean>(true);
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
@@ -123,6 +126,7 @@ function MapPage() {
 
         const pass = await fetchAllMountainPasses();
         setIndividualGeojsons(buildIndividualGeoJson(pass.data));
+        setLoadingFjelloverganger(false);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
