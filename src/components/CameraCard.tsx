@@ -8,7 +8,12 @@ import {
 } from "@mui/material";
 import { Thermostat, Air, Thunderstorm } from "@mui/icons-material";
 
-function CameraCard({ imgSrc }: { imgSrc: string }) {
+interface CameraCardProps {
+  imgSrc: string;
+  fjell: string;
+}
+
+function CameraCard({ imgSrc, fjell }: CameraCardProps) {
   return (
     <Card>
       <CardMedia
@@ -19,7 +24,7 @@ function CameraCard({ imgSrc }: { imgSrc: string }) {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Saltfjellet
+          {fjell}
         </Typography>
         <Stack direction={"row"} spacing={2}>
           <Chip label={"2.7 C"} icon={<Thermostat />} />
