@@ -3,18 +3,25 @@ import { KeyboardArrowRight, Circle } from "@mui/icons-material";
 import { MountainPassData } from "../utils/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import CardStats from "./CardStats";
+import { predictions } from "../utils/PredictionTypes";
+
+interface MountainPassCardProps {
+  data: MountainPassData;
+  handleClick: (id: number, open: boolean, index: number) => void;
+  index: number;
+  openIndex: number | null;
+  prediction: predictions[];
+  predictionLoading: boolean;
+}
 
 function MountainPassCard({
   data,
   handleClick,
   index,
   openIndex,
-}: {
-  data: MountainPassData;
-  handleClick: (id: number, open: boolean, index: number) => void;
-  index: number;
-  openIndex: number | null;
-}) {
+  prediction,
+  predictionLoading,
+}: MountainPassCardProps) {
   const isOpen = openIndex == index;
   const handleCardClick = () => handleClick(data.properties.id, !isOpen, index);
 
@@ -22,6 +29,7 @@ function MountainPassCard({
     <Card
       variant="outlined"
       sx={{
+        marginBottom: "10px",
         padding: 1,
         minWidth: 275,
         minHeight: 75,
@@ -60,7 +68,19 @@ function MountainPassCard({
       </Box>
 
       <Collapse in={isOpen} unmountOnExit>
+        <Divider sx={{ marginTop: 2, marginBottom: 2, opacity: 0.8 }} />
+
+        <Typography variant="body2">
+          Fra: {data.properties.stedfesting.fra} -{" "}
+          {data.properties.stedfesting.lokaltFra}
+        </Typography>
+        <Typography variant="body2">
+          Til: {data.properties.stedfesting.til} -{" "}
+          {data.properties.stedfesting.lokaltTil}
+        </Typography>
+
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
+<<<<<<< HEAD
         <Box sx={{ padding: 1, marginTop: 1 }}>
           <Typography variant="body2">
             Fra: {data.properties.fra} - {data.properties.lokaltFra}
@@ -70,9 +90,13 @@ function MountainPassCard({
           </Typography>
         </Box>
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
+=======
+
+>>>>>>> origin/main
         <Typography variant="h6">Prognose</Typography>
-        <PrognoseCard />
-        <CardStats></CardStats>
+        <PrognoseCard prediction={prediction} loading={predictionLoading} />
+
+        <CardStats />
       </Collapse>
     </Card>
   );
