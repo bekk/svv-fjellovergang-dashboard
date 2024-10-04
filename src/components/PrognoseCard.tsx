@@ -1,51 +1,73 @@
-import { Divider, Typography, Stack, Chip } from "@mui/material";
+import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
+import { predictions } from "../utils/PredictionTypes";
 
-function PrognoseCard() {
+const formatDate = (date: Date): string => {
+  return date
+    .toLocaleString("sv-SE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    })
+    .replace(",", "")
+    .replace(/\//g, "-");
+};
+
+interface ProgniseCardProps {
+  prediction: predictions[];
+  loading: boolean;
+}
+function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
+  const now = formatDate(new Date());
+
+  const futureDate = new Date(now);
+  futureDate.setHours(23, 59, 59, 999);
+
+  const endOfDay = formatDate(futureDate);
+
   return (
     <Stack spacing={2}>
       <Typography>Risiko for stenging på grunn av vær</Typography>
 
-      <Typography variant="subtitle1">Neste 24 Timene</Typography>
-      <Stack direction={"row"} spacing={7}>
-        <Typography>0-6 timer:</Typography>
-        <Chip label={"Høy (73%)"} sx={{ backgroundColor: "#f25757" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={6}>
-        <Typography>6-12 timer:</Typography>
-        <Chip label={"Middels (45%)"} sx={{ backgroundColor: "#f7b945" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={5}>
-        <Typography>12-24 timer:</Typography>
-        <Chip label={"Lav (22%)"} sx={{ backgroundColor: "#2fd460" }} />
-      </Stack>
+      <Typography variant="subtitle1">I dag</Typography>
+
+      {loading ? (
+        <Skeleton variant="rounded" width={210} height={300} />
+      ) : (
+        prediction.map((hour) =>
+          hour.datetime >= now && hour.datetime <= endOfDay ? (
+            <Stack direction={"row"} spacing={7}>
+              <Typography>{hour.datetime.split(" ")[1]}</Typography>
+              <Chip
+                label={hour.prediction.toFixed(2)}
+                sx={{ backgroundColor: "#2fd460" }}
+              />
+            </Stack>
+          ) : null
+        )
+      )}
 
       <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
 
-      <Typography variant="subtitle1">Neste 6 dager</Typography>
-      <Stack direction={"row"} spacing={9}>
-        <Typography>Tirsdag:</Typography>
-        <Chip label={"Høy (73%)"} sx={{ backgroundColor: "#f5abab" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={9}>
-        <Typography>Onsdag:</Typography>
-        <Chip label={"Lav (22%)"} sx={{ backgroundColor: "#a2f1c4" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={9}>
-        <Typography>Torsdag:</Typography>
-        <Chip label={"Middels (45%)"} sx={{ backgroundColor: "#fce5bb" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={10}>
-        <Typography>Fredag:</Typography>
-        <Chip label={"Middels (45%)"} sx={{ backgroundColor: "#fce5bb" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={10}>
-        <Typography>Lørdag:</Typography>
-        <Chip label={"Middels (45%)"} sx={{ backgroundColor: "#fce5bb" }} />
-      </Stack>
-      <Stack direction={"row"} spacing={9}>
-        <Typography>Søndag:</Typography>
-        <Chip label={"Middels (45%)"} sx={{ backgroundColor: "#fce5bb" }} />
-      </Stack>
+      <Typography variant="subtitle1">I morgen</Typography>
+      {loading ? (
+        <Skeleton variant="rounded" width={210} height={300} />
+      ) : (
+        prediction.map((hour) =>
+          hour.datetime >= endOfDay ? (
+            <Stack direction={"row"} spacing={7}>
+              <Typography>{hour.datetime.split(" ")[1]}</Typography>
+              <Chip
+                label={hour.prediction.toFixed(2)}
+                sx={{ backgroundColor: "#2fd460" }}
+              />
+            </Stack>
+          ) : null
+        )
+      )}
     </Stack>
   );
 }
