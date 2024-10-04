@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Switch, Typography, IconButton } from "@mui/material";
+import { Switch, Typography, IconButton, Skeleton } from "@mui/material";
 import { LightMode, DarkMode } from "@mui/icons-material";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -170,17 +170,21 @@ function MapPage() {
           </section>
 
           <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
-            {individualGeojsons.map((mountainPassData: MountainPassData) => (
-              <MountainPassCard
-                data={mountainPassData}
-                handleClick={handleClick}
-                index={mountainPassData.properties.id}
-                openIndex={activeCardIndex}
-                key={mountainPassData.properties.id}
-                prediction={prediction}
-                predictionLoading={predictionLoading}
-              />
-            ))}
+            {loadingFjelloverganger ? (
+              <Skeleton variant="rounded" height={"91vh"} />
+            ) : (
+              individualGeojsons.map((mountainPassData: MountainPassData) => (
+                <MountainPassCard
+                  data={mountainPassData}
+                  handleClick={handleClick}
+                  index={mountainPassData.properties.id}
+                  openIndex={activeCardIndex}
+                  key={mountainPassData.properties.id}
+                  prediction={prediction}
+                  predictionLoading={predictionLoading}
+                />
+              ))
+            )}
           </nav>
         </div>
         <Map
@@ -194,7 +198,7 @@ function MapPage() {
           {showAll ? (
             individualGeojsons.map((mountainPassData: MountainPassData) => (
               <Source
-                id={mountainPassData.properties.id}
+                id={mountainPassData.properties.id.toString()}
                 type="geojson"
                 data={mountainPassData}
                 key={mountainPassData.properties.id}

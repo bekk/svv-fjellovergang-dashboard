@@ -71,16 +71,13 @@ function MountainPassCard({
         <Divider sx={{ marginTop: 2, marginBottom: 2, opacity: 0.8 }} />
 
         <Typography variant="body2">
-          Fra: {data.properties.stedfesting.fra} -{" "}
-          {data.properties.stedfesting.lokaltFra}
+          Fra: {data.properties.fra} - {data.properties.lokaltFra}
         </Typography>
         <Typography variant="body2">
-          Til: {data.properties.stedfesting.til} -{" "}
-          {data.properties.stedfesting.lokaltTil}
+          Til: {data.properties.til} - {data.properties.lokaltTil}
         </Typography>
 
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
-<<<<<<< HEAD
         <Box sx={{ padding: 1, marginTop: 1 }}>
           <Typography variant="body2">
             Fra: {data.properties.fra} - {data.properties.lokaltFra}
@@ -90,9 +87,7 @@ function MountainPassCard({
           </Typography>
         </Box>
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
-=======
 
->>>>>>> origin/main
         <Typography variant="h6">Prognose</Typography>
         <PrognoseCard prediction={prediction} loading={predictionLoading} />
 
