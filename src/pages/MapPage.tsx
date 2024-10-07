@@ -9,8 +9,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
 import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
+import { WeatherData } from "../utils/dataTypes";
 import CameraCard from "../components/CameraCard";
-import { fetchAllMountainPasses, fetchPrediction } from "../api/api";
+import { fetchAllMountainPasses, fetchPrediction, fetchWeatherData } from "../api/api";
 import { predictions } from "../utils/PredictionTypes";
 import wellknown from "wellknown";
 
@@ -69,6 +70,7 @@ function MapPage() {
   const [fjell, setFjell] = useState<string>("");
   const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>();
 
   const theme = createTheme({
     palette: {
@@ -92,8 +94,6 @@ function MapPage() {
       if (foundPass) {
         setMountainPass(foundPass);
         if (mapRef.current && foundPass.properties.senter) {
-          console.log("SENTER");
-          console.log(foundPass.properties.senter.coordinates[0]);
           mapRef.current.flyTo({
             center: [
               foundPass.properties.senter.coordinates[0],
@@ -118,6 +118,7 @@ function MapPage() {
         duration: 2000,
       });
       setCoordinates(null);
+      setWeatherData(null);
     }
   };
 
@@ -138,6 +139,22 @@ function MapPage() {
 
     getData();
   }, []);
+
+  useEffect(() => {
+    const getWeatherData = async () => {
+      try {
+        if (coordinates !== null) {
+          const weatherData = await fetchWeatherData(coordinates[0], coordinates[1]);
+          if (weatherData.status === 200) {
+            setWeatherData(weatherData.data);
+          } 
+        } 
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+    }
+    getWeatherData();
+  }, [coordinates]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -203,13 +220,14 @@ function MapPage() {
                 data={mountainPassData}
                 key={mountainPassData.properties.id}
               >
-                {coordinates && (
+                {coordinates && weatherData && (
                   <Marker longitude={coordinates[0]} latitude={coordinates[1]}>
                     <CameraCard
                       imgSrc={
                         "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
                       }
                       fjell={fjell}
+                      weatherData={weatherData}
                     />
                   </Marker>
                 )}
