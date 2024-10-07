@@ -78,15 +78,6 @@ function MountainPassCard({
         </Typography>
 
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
-        <Box sx={{ padding: 1, marginTop: 1 }}>
-          <Typography variant="body2">
-            Fra: {data.properties.fra} - {data.properties.lokaltFra}
-          </Typography>
-          <Typography variant="body2">
-            Til: {data.properties.til} - {data.properties.lokaltTil}
-          </Typography>
-        </Box>
-        <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
 
         <Typography variant="h6">Prognose</Typography>
         <PrognoseCard prediction={prediction} loading={predictionLoading} />
