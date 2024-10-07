@@ -79,13 +79,13 @@ function MapPage() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await fetchPrediction();
-        setPrediction(result.data);
-        setPredictionLoading(false);
-
         const pass = await fetchAllMountainPasses();
         setIndividualGeojsons(buildIndividualGeoJson(pass.data));
         setLoadingFjelloverganger(false);
+
+        const result = await fetchPrediction();
+        setPrediction(result.data);
+        setPredictionLoading(false);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
