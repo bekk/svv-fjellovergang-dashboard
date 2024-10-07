@@ -59,6 +59,8 @@ function MapPage() {
 
   const [showAll, setShowAll] = useState<boolean>(true);
 
+  const [finishedZoom, setFinishedZoom] = useState<boolean>(false);
+
   const [loadingFjelloverganger, setLoadingFjelloverganger] =
     useState<boolean>(true);
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
@@ -96,14 +98,17 @@ function MapPage() {
 
   useEffect(() => {
     if (mapRef.current) {
+      setFinishedZoom(false);
       if (selectedPass && selectedPass.properties.senter) {
         const [longitude, latitude] =
           selectedPass.properties.senter.coordinates;
-        mapRef.current.flyTo({
-          center: [longitude, latitude],
-          zoom: 10,
-          duration: 2000,
-        });
+        mapRef.current
+          .flyTo({
+            center: [longitude, latitude],
+            zoom: 10,
+            duration: 2000,
+          })
+          .once("moveend", () => setFinishedZoom(true));
       } else {
         mapRef.current.flyTo({
           center: [initialViewState.longitude, initialViewState.latitude],
@@ -181,19 +186,21 @@ function MapPage() {
                 data={mountainPassData}
                 key={mountainPassData.properties.id}
               >
-                {selectedPass && selectedPass.properties.senter && (
-                  <Marker
-                    longitude={selectedPass.properties.senter.coordinates[0]}
-                    latitude={selectedPass.properties.senter.coordinates[1]}
-                  >
-                    <CameraCard
-                      imgSrc={
-                        "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
-                      }
-                      fjell={selectedPass.properties.navn}
-                    />
-                  </Marker>
-                )}
+                {selectedPass &&
+                  finishedZoom &&
+                  selectedPass.properties.senter && (
+                    <Marker
+                      longitude={selectedPass.properties.senter.coordinates[0]}
+                      latitude={selectedPass.properties.senter.coordinates[1]}
+                    >
+                      <CameraCard
+                        imgSrc={
+                          "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
+                        }
+                        fjell={selectedPass.properties.navn}
+                      />
+                    </Marker>
+                  )}
                 <Layer
                   id={`route-layer-${mountainPassData.properties.id}`}
                   type="line"
