@@ -9,8 +9,13 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
 import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
+import { WeatherData } from "../utils/dataTypes";
 import CameraCard from "../components/CameraCard";
-import { fetchAllMountainPasses, fetchPrediction } from "../api/api";
+import {
+  fetchAllMountainPasses,
+  fetchPrediction,
+  fetchWeatherData,
+} from "../api/api";
 import { predictions } from "../utils/PredictionTypes";
 import wellknown from "wellknown";
 
@@ -65,6 +70,7 @@ function MapPage() {
     useState<boolean>(true);
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>();
 
   const [selectedPass, setSelectedPass] = useState<MountainPassData | null>(
     null
@@ -97,9 +103,28 @@ function MapPage() {
   }, []);
 
   useEffect(() => {
+    const getWeatherData = async () => {
+      try {
+        if (selectedPass !== null) {
+          const weatherData = await fetchWeatherData(
+            selectedPass.properties.senter.coordinates[0],
+            selectedPass.properties.senter.coordinates[1]
+          );
+          if (weatherData.status === 200) {
+            setWeatherData(weatherData.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+    };
+    getWeatherData();
+  }, [selectedPass]);
+
+  useEffect(() => {
     if (mapRef.current) {
       setFinishedZoom(false);
-      if (selectedPass && selectedPass.properties.senter) {
+      if (selectedPass) {
         const [longitude, latitude] =
           selectedPass.properties.senter.coordinates;
         mapRef.current
@@ -115,6 +140,7 @@ function MapPage() {
           zoom: 6,
           duration: 2000,
         });
+        setWeatherData(null);
       }
     }
   }, [selectedPass]);
@@ -188,6 +214,7 @@ function MapPage() {
               >
                 {selectedPass &&
                   finishedZoom &&
+                  weatherData &&
                   selectedPass.properties.senter && (
                     <Marker
                       longitude={selectedPass.properties.senter.coordinates[0]}
@@ -198,6 +225,7 @@ function MapPage() {
                           "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
                         }
                         fjell={selectedPass.properties.navn}
+                        weatherData={weatherData}
                       />
                     </Marker>
                   )}

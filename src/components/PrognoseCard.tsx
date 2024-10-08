@@ -37,9 +37,9 @@ function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
       {loading ? (
         <Skeleton variant="rounded" width={210} height={300} />
       ) : (
-        prediction.map((hour) =>
+        prediction.map((hour, index) =>
           hour.datetime >= now && hour.datetime <= endOfDay ? (
-            <Stack direction={"row"} spacing={7}>
+            <Stack key={index} direction={"row"} spacing={7}>
               <Typography>{hour.datetime.split(" ")[1]}</Typography>
               <Chip
                 label={hour.prediction.toFixed(2)}
@@ -56,9 +56,9 @@ function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
       {loading ? (
         <Skeleton variant="rounded" width={210} height={300} />
       ) : (
-        prediction.map((hour) =>
+        prediction.map((hour, index) =>
           hour.datetime >= endOfDay ? (
-            <Stack direction={"row"} spacing={7}>
+            <Stack key={index} direction={"row"} spacing={7}>
               <Typography>{hour.datetime.split(" ")[1]}</Typography>
               <Chip
                 label={hour.prediction.toFixed(2)}
