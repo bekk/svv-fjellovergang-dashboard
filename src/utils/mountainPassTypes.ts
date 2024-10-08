@@ -18,6 +18,6 @@ export type MountainPassType = {
   til: string;
   lokaltFra: string;
   lokaltTil: string;
-  senter?: GeoJSON.Point;
+  senter: GeoJSON.Point;
   wkt: string;
 };

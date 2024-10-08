@@ -11,7 +11,11 @@ import MountainPassCard from "../components/MountainPassCard";
 import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
 import { WeatherData } from "../utils/dataTypes";
 import CameraCard from "../components/CameraCard";
-import { fetchAllMountainPasses, fetchPrediction, fetchWeatherData } from "../api/api";
+import {
+  fetchAllMountainPasses,
+  fetchPrediction,
+  fetchWeatherData,
+} from "../api/api";
 import { predictions } from "../utils/PredictionTypes";
 import wellknown from "wellknown";
 
@@ -59,18 +63,18 @@ function MapPage() {
   >([]);
 
   const [showAll, setShowAll] = useState<boolean>(true);
-  const [mountainPass, setMountainPass] = useState<MountainPassData | null>(
-    null
-  );
+
+  const [finishedZoom, setFinishedZoom] = useState<boolean>(false);
 
   const [loadingFjelloverganger, setLoadingFjelloverganger] =
     useState<boolean>(true);
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
-  const [fjell, setFjell] = useState<string>("");
-  const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>();
+
+  const [selectedPass, setSelectedPass] = useState<MountainPassData | null>(
+    null
+  );
 
   const theme = createTheme({
     palette: {
@@ -78,60 +82,18 @@ function MapPage() {
     },
   });
 
-  const mapStyle = darkMode
-    ? "mapbox://styles/mapbox/dark-v11"
-    : "mapbox://styles/mapbox/light-v11";
-
   const mapRef = useRef<any>(null);
-
-  const handleClick = (id: number, open: boolean, index: number) => {
-    setActiveCardIndex((prevIndex) => (prevIndex === index ? null : index));
-
-    if (open) {
-      const foundPass = individualGeojsons.find(
-        (pass) => pass.properties.id === id
-      );
-      if (foundPass) {
-        setMountainPass(foundPass);
-        if (mapRef.current && foundPass.properties.senter) {
-          mapRef.current.flyTo({
-            center: [
-              foundPass.properties.senter.coordinates[0],
-              foundPass.properties.senter.coordinates[1],
-            ],
-            zoom: 10,
-            duration: 2000,
-          });
-          setCoordinates([
-            foundPass.properties.senter.coordinates[0] + 0.1,
-            foundPass.properties.senter.coordinates[1] + 0.1,
-          ]);
-          setFjell(foundPass.properties.navn);
-        }
-      } else {
-        console.log("Mountain pass not found");
-      }
-    } else {
-      setMountainPass(null);
-      mapRef.current.flyTo({
-        zoom: 6,
-        duration: 2000,
-      });
-      setCoordinates(null);
-      setWeatherData(null);
-    }
-  };
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const result = await fetchPrediction();
-        setPrediction(result.data);
-        setPredictionLoading(false);
-
         const pass = await fetchAllMountainPasses();
         setIndividualGeojsons(buildIndividualGeoJson(pass.data));
         setLoadingFjelloverganger(false);
+
+        const result = await fetchPrediction();
+        setPrediction(result.data);
+        setPredictionLoading(false);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
@@ -143,18 +105,45 @@ function MapPage() {
   useEffect(() => {
     const getWeatherData = async () => {
       try {
-        if (coordinates !== null) {
-          const weatherData = await fetchWeatherData(coordinates[0], coordinates[1]);
+        if (selectedPass !== null) {
+          const weatherData = await fetchWeatherData(
+            selectedPass.properties.senter.coordinates[0],
+            selectedPass.properties.senter.coordinates[1]
+          );
           if (weatherData.status === 200) {
             setWeatherData(weatherData.data);
-          } 
-        } 
+          }
+        }
       } catch (error) {
         console.error("Error fetching weather data:", error);
       }
-    }
+    };
     getWeatherData();
-  }, [coordinates]);
+  }, [selectedPass]);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      setFinishedZoom(false);
+      if (selectedPass) {
+        const [longitude, latitude] =
+          selectedPass.properties.senter.coordinates;
+        mapRef.current
+          .flyTo({
+            center: [longitude, latitude],
+            zoom: 10,
+            duration: 2000,
+          })
+          .once("moveend", () => setFinishedZoom(true));
+      } else {
+        mapRef.current.flyTo({
+          center: [initialViewState.longitude, initialViewState.latitude],
+          zoom: 6,
+          duration: 2000,
+        });
+        setWeatherData(null);
+      }
+    }
+  }, [selectedPass]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -193,12 +182,11 @@ function MapPage() {
               individualGeojsons.map((mountainPassData: MountainPassData) => (
                 <MountainPassCard
                   data={mountainPassData}
-                  handleClick={handleClick}
-                  index={mountainPassData.properties.id}
-                  openIndex={activeCardIndex}
                   key={mountainPassData.properties.id}
                   prediction={prediction}
                   predictionLoading={predictionLoading}
+                  selectPass={setSelectedPass}
+                  selectedPass={selectedPass}
                 />
               ))
             )}
@@ -207,7 +195,11 @@ function MapPage() {
         <Map
           {...viewState}
           ref={mapRef}
-          mapStyle={mapStyle}
+          mapStyle={
+            darkMode
+              ? "mapbox://styles/mapbox/dark-v11"
+              : "mapbox://styles/mapbox/light-v11"
+          }
           mapboxAccessToken={MAPBOX_TOKEN}
           onMove={(e) => setViewState(e.viewState)}
           style={{ flex: "3", height: "100%", width: "100%" }}
@@ -220,17 +212,23 @@ function MapPage() {
                 data={mountainPassData}
                 key={mountainPassData.properties.id}
               >
-                {coordinates && weatherData && (
-                  <Marker longitude={coordinates[0]} latitude={coordinates[1]}>
-                    <CameraCard
-                      imgSrc={
-                        "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
-                      }
-                      fjell={fjell}
-                      weatherData={weatherData}
-                    />
-                  </Marker>
-                )}
+                {selectedPass &&
+                  finishedZoom &&
+                  weatherData &&
+                  selectedPass.properties.senter && (
+                    <Marker
+                      longitude={selectedPass.properties.senter.coordinates[0]}
+                      latitude={selectedPass.properties.senter.coordinates[1]}
+                    >
+                      <CameraCard
+                        imgSrc={
+                          "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
+                        }
+                        fjell={selectedPass.properties.navn}
+                        weatherData={weatherData}
+                      />
+                    </Marker>
+                  )}
                 <Layer
                   id={`route-layer-${mountainPassData.properties.id}`}
                   type="line"
@@ -247,18 +245,18 @@ function MapPage() {
           ) : (
             <></>
           )}
-          {mountainPass && !showAll ? (
+          {selectedPass && !showAll ? (
             <Source
               id="mountain-pass-source"
               type="geojson"
-              data={mountainPass}
+              data={selectedPass}
             >
               <Layer
                 id="mountain-pass-layer"
                 type="line"
                 layout={{ "line-cap": "round", "line-join": "round" }}
                 paint={
-                  mountainPass.properties.strekningsType === "Fjellovergang"
+                  selectedPass.properties.strekningsType === "Fjellovergang"
                     ? { "line-color": "#FF9999", "line-width": 2 }
                     : { "line-color": "#99CCFF", "line-width": 2 }
                 }

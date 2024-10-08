@@ -4,26 +4,28 @@ import { MountainPassData } from "../utils/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import CardStats from "./CardStats";
 import { predictions } from "../utils/PredictionTypes";
+import { Dispatch, SetStateAction } from "react";
 
 interface MountainPassCardProps {
   data: MountainPassData;
-  handleClick: (id: number, open: boolean, index: number) => void;
-  index: number;
-  openIndex: number | null;
   prediction: predictions[];
   predictionLoading: boolean;
+  selectPass: Dispatch<SetStateAction<MountainPassData | null>>;
+  selectedPass: MountainPassData | null;
 }
 
 function MountainPassCard({
   data,
-  handleClick,
-  index,
-  openIndex,
   prediction,
   predictionLoading,
+  selectPass,
+  selectedPass,
 }: MountainPassCardProps) {
-  const isOpen = openIndex == index;
-  const handleCardClick = () => handleClick(data.properties.id, !isOpen, index);
+  const isOpen = selectedPass?.properties.id === data.properties.id;
+  const handleCardClick = () =>
+    selectPass((prevPass) =>
+      prevPass && prevPass.properties.id === data.properties.id ? null : data
+    );
 
   return (
     <Card
