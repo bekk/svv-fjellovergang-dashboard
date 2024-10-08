@@ -20,5 +20,9 @@ export const fetchMountainPasses = (id: string) => {
 };
 
 export const fetchWeatherData = (lat: number, lon: number) => {
-  return apiClient.get(`/getCurrentWeather?lat=${lat}&lon=${lon}`)
-}
+  return apiClient.get(`/getCurrentWeather?lat=${lat}&lon=${lon}`);
+};
+
+export const fetchPassabillity = () => {
+  return apiClient.get("/getCurrentPassability");
+};

@@ -13,10 +13,11 @@ import { WeatherData } from "../utils/dataTypes";
 import CameraCard from "../components/CameraCard";
 import {
   fetchAllMountainPasses,
+  fetchPassabillity,
   fetchPrediction,
   fetchWeatherData,
 } from "../api/api";
-import { predictions } from "../utils/PredictionTypes";
+import { passabillity, predictions } from "../utils/PredictionTypes";
 import wellknown from "wellknown";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
@@ -76,6 +77,8 @@ function MapPage() {
     null
   );
 
+  const [passability, setPassability] = useState<passabillity | null>(null);
+
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
@@ -90,6 +93,9 @@ function MapPage() {
         const pass = await fetchAllMountainPasses();
         setIndividualGeojsons(buildIndividualGeoJson(pass.data));
         setLoadingFjelloverganger(false);
+
+        const hbt = await fetchPassabillity();
+        setPassability(hbt.data);
 
         const result = await fetchPrediction();
         setPrediction(result.data);
@@ -187,6 +193,7 @@ function MapPage() {
                   predictionLoading={predictionLoading}
                   selectPass={setSelectedPass}
                   selectedPass={selectedPass}
+                  closed={passability?.passability}
                 />
               ))
             )}
