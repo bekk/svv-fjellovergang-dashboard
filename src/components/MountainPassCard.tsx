@@ -12,6 +12,7 @@ interface MountainPassCardProps {
   predictionLoading: boolean;
   selectPass: Dispatch<SetStateAction<MountainPassData | null>>;
   selectedPass: MountainPassData | null;
+  closed?: boolean;
 }
 
 function MountainPassCard({
@@ -20,6 +21,7 @@ function MountainPassCard({
   predictionLoading,
   selectPass,
   selectedPass,
+  closed,
 }: MountainPassCardProps) {
   const isOpen = selectedPass?.properties.id === data.properties.id;
   const handleCardClick = () =>
@@ -63,7 +65,7 @@ function MountainPassCard({
           />
           <Chip
             icon={<Circle color="success" />}
-            label="Åpen"
+            label={closed ? "Stengt" : "Åpen"}
             sx={{ backgroundColor: "#a2f1c4" }}
           />
         </Box>
