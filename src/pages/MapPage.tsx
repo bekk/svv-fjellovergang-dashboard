@@ -8,7 +8,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
-import { MountainPassData, MountainPassType } from "../types/mountainPassTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
 import { WeatherData } from "../types/dataTypes";
 import CameraCard from "../components/CameraCard";
 import {
@@ -17,36 +17,10 @@ import {
   fetchPrediction,
   fetchWeatherData,
 } from "../api/api";
-import { passabillity, predictions } from "../types/PredictionTypes";
-import wellknown from "wellknown";
 import useFetch from "../hooks/useFetch";
+import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-
-const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
-  return data.map((feature: any) => {
-    const individualGeoJSON: MountainPassData = {
-      type: "Feature",
-      geometry: wellknown.parse(feature.wkt),
-      properties: {
-        id: feature.id,
-        navn: feature.navn,
-        overgangsType: feature.overgangstype,
-        antallFylker: feature.antallFylker,
-        veiKategori: feature.veiKategori,
-        veiNummer: feature.veiNummer,
-        strekningsType: feature.strekningsType,
-        fra: feature.fra,
-        til: feature.til,
-        lokaltFra: feature.lokaltFra,
-        lokaltTil: feature.lokaltTil,
-        senter: wellknown.parse(feature.senter) as GeoJSON.Point,
-        wkt: feature.wkt,
-      },
-    };
-    return individualGeoJSON;
-  });
-};
 
 const initialViewState: ViewState = {
   longitude: 8.4999235,
