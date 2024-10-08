@@ -1,5 +1,5 @@
 import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
-import { predictions } from "../utils/PredictionTypes";
+import { predictions } from "../types/PredictionTypes";
 
 const formatDate = (date: Date): string => {
   return date

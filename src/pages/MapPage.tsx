@@ -8,8 +8,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
-import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
-import { WeatherData } from "../utils/dataTypes";
+import { MountainPassData, MountainPassType } from "../types/mountainPassTypes";
+import { WeatherData } from "../types/dataTypes";
 import CameraCard from "../components/CameraCard";
 import {
   fetchAllMountainPasses,
@@ -17,7 +17,7 @@ import {
   fetchPrediction,
   fetchWeatherData,
 } from "../api/api";
-import { passabillity, predictions } from "../utils/PredictionTypes";
+import { passabillity, predictions } from "../types/PredictionTypes";
 import wellknown from "wellknown";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
