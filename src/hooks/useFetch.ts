@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 const useFetch = <T, R = T>(
   fetchService: () => Promise<AxiosResponse<T>>,
-  transform: (data: T) => R = (data: T) => data as unknown as R // Default transform
+  transform: (data: T) => R = (data: T) => data as unknown as R
 ): { data: R | null; error: any; loading: boolean } => {
   const [data, setData] = useState<R | null>(null);
   const [error, setError] = useState<any>(null);
@@ -23,7 +23,7 @@ const useFetch = <T, R = T>(
     };
 
     getData();
-  }, [fetchService, transform]);
+  }, []);
 
   return { data, error, loading };
 };
