@@ -7,7 +7,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { Thermostat, Air, Thunderstorm } from "@mui/icons-material";
-import { WeatherData } from "../utils/dataTypes";
+import { WeatherData } from "../types/dataTypes";
 
 interface CameraCardProps {
   imgSrc: string;
@@ -29,8 +29,19 @@ function CameraCard({ imgSrc, fjell, weatherData }: CameraCardProps) {
           {fjell}
         </Typography>
         <Stack direction={"row"} spacing={2}>
-          {weatherData.temperature ? <Chip label={weatherData.temperature + "°C"} icon={<Thermostat />} /> : <></>}
-          {weatherData.windSpeed ? <Chip label={weatherData.windSpeed + "m/s"} icon={<Air />} /> : <></>}
+          {weatherData.temperature ? (
+            <Chip
+              label={weatherData.temperature + "°C"}
+              icon={<Thermostat />}
+            />
+          ) : (
+            <></>
+          )}
+          {weatherData.windSpeed ? (
+            <Chip label={weatherData.windSpeed + "m/s"} icon={<Air />} />
+          ) : (
+            <></>
+          )}
           {false ? <Chip label={"null"} icon={<Thunderstorm />} /> : <></>}
         </Stack>
       </CardContent>

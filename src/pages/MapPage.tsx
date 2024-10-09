@@ -8,8 +8,8 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
-import { MountainPassData, MountainPassType } from "../utils/mountainPassTypes";
-import { WeatherData } from "../utils/dataTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
+import { WeatherData } from "../types/dataTypes";
 import CameraCard from "../components/CameraCard";
 import {
   fetchAllMountainPasses,
@@ -17,35 +17,10 @@ import {
   fetchPrediction,
   fetchWeatherData,
 } from "../api/api";
-import { passabillity, predictions } from "../utils/PredictionTypes";
-import wellknown from "wellknown";
+import useFetch from "../hooks/useFetch";
+import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
-
-const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
-  return data.map((feature: any) => {
-    const individualGeoJSON: MountainPassData = {
-      type: "Feature",
-      geometry: wellknown.parse(feature.wkt),
-      properties: {
-        id: feature.id,
-        navn: feature.navn,
-        overgangsType: feature.overgangstype,
-        antallFylker: feature.antallFylker,
-        veiKategori: feature.veiKategori,
-        veiNummer: feature.veiNummer,
-        strekningsType: feature.strekningsType,
-        fra: feature.fra,
-        til: feature.til,
-        lokaltFra: feature.lokaltFra,
-        lokaltTil: feature.lokaltTil,
-        senter: wellknown.parse(feature.senter) as GeoJSON.Point,
-        wkt: feature.wkt,
-      },
-    };
-    return individualGeoJSON;
-  });
-};
 
 const initialViewState: ViewState = {
   longitude: 8.4999235,
@@ -57,18 +32,28 @@ const initialViewState: ViewState = {
 };
 
 function MapPage() {
-  const [prediction, setPrediction] = useState<predictions[]>([]);
-  const [predictionLoading, setPredictionLoading] = useState<boolean>(true);
-  const [individualGeojsons, setIndividualGeojsons] = useState<
-    MountainPassData[]
-  >([]);
+  const {
+    data: individualGeojsons,
+    error: geoError,
+    loading: loadingFjelloverganger,
+  } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
+
+  const {
+    data: prediction,
+    error: predictionError,
+    loading: predictionLoading,
+  } = useFetch(fetchPrediction);
+
+  const {
+    data: passability,
+    error: passabilityError,
+    loading: passabilityLoading,
+  } = useFetch(fetchPassabillity);
 
   const [showAll, setShowAll] = useState<boolean>(true);
 
   const [finishedZoom, setFinishedZoom] = useState<boolean>(false);
 
-  const [loadingFjelloverganger, setLoadingFjelloverganger] =
-    useState<boolean>(true);
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>();
@@ -77,8 +62,6 @@ function MapPage() {
     null
   );
 
-  const [passability, setPassability] = useState<passabillity | null>(null);
-
   const theme = createTheme({
     palette: {
       mode: darkMode ? "dark" : "light",
@@ -86,27 +69,6 @@ function MapPage() {
   });
 
   const mapRef = useRef<any>(null);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const pass = await fetchAllMountainPasses();
-        setIndividualGeojsons(buildIndividualGeoJson(pass.data));
-        setLoadingFjelloverganger(false);
-
-        const hbt = await fetchPassabillity();
-        setPassability(hbt.data);
-
-        const result = await fetchPrediction();
-        setPrediction(result.data);
-        setPredictionLoading(false);
-      } catch (error) {
-        console.log(`Error: ${error}`);
-      }
-    };
-
-    getData();
-  }, []);
 
   useEffect(() => {
     const getWeatherData = async () => {
@@ -185,7 +147,7 @@ function MapPage() {
             {loadingFjelloverganger ? (
               <Skeleton variant="rounded" height={"91vh"} />
             ) : (
-              individualGeojsons.map((mountainPassData: MountainPassData) => (
+              individualGeojsons?.map((mountainPassData: MountainPassData) => (
                 <MountainPassCard
                   data={mountainPassData}
                   key={mountainPassData.properties.id}
@@ -212,7 +174,7 @@ function MapPage() {
           style={{ flex: "3", height: "100%", width: "100%" }}
         >
           {showAll ? (
-            individualGeojsons.map((mountainPassData: MountainPassData) => (
+            individualGeojsons?.map((mountainPassData: MountainPassData) => (
               <Source
                 id={mountainPassData.properties.id.toString()}
                 type="geojson"

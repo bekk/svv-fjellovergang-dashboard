@@ -1,9 +1,9 @@
 import { Card, Typography, Chip, Box, Collapse, Divider } from "@mui/material";
 import { KeyboardArrowRight, Circle } from "@mui/icons-material";
-import { MountainPassData } from "../utils/mountainPassTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import CardStats from "./CardStats";
-import { predictions } from "../utils/PredictionTypes";
+import { predictions } from "../types/PredictionTypes";
 import { Dispatch, SetStateAction } from "react";
 
 interface MountainPassCardProps {
