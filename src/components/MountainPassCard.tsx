@@ -5,11 +5,11 @@ import PrognoseCard from "./PrognoseCard";
 import CardStats from "./CardStats";
 import { predictions } from "../types/PredictionTypes";
 import { Dispatch, SetStateAction } from "react";
+import { fetchPrediction } from "../api/api";
+import useFetch from "../hooks/useFetch";
 
 interface MountainPassCardProps {
   data: MountainPassData;
-  prediction: predictions[];
-  predictionLoading: boolean;
   selectPass: Dispatch<SetStateAction<MountainPassData | null>>;
   selectedPass: MountainPassData | null;
   closed?: boolean;
@@ -17,8 +17,6 @@ interface MountainPassCardProps {
 
 function MountainPassCard({
   data,
-  prediction,
-  predictionLoading,
   selectPass,
   selectedPass,
   closed,
@@ -28,6 +26,12 @@ function MountainPassCard({
     selectPass((prevPass) =>
       prevPass && prevPass.properties.id === data.properties.id ? null : data
     );
+
+  const {
+    data: prediction,
+    error: predictionError,
+    loading: predictionLoading,
+  } = useFetch(() => fetchPrediction(data.properties.id.toString()));
 
   return (
     <Card
@@ -85,8 +89,6 @@ function MountainPassCard({
 
         <Typography variant="h6">Prognose</Typography>
         <PrognoseCard prediction={prediction} loading={predictionLoading} />
-
-        <CardStats />
       </Collapse>
     </Card>
   );
