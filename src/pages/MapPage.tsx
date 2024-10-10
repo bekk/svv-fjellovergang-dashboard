@@ -13,7 +13,6 @@ import CameraCard from "../components/CameraCard";
 import {
   fetchAllMountainPasses,
   fetchPassabillity,
-  fetchPrediction,
   fetchWeatherData,
 } from "../api/api";
 import useFetch from "../hooks/useFetch";
@@ -22,6 +21,7 @@ import { fetchAllCameras } from "../api/cameraApi";
 import { filterCameras } from "../utils/filterCameras";
 
 import { cameraData, MountainPassData } from "../types/mountainPassTypes";
+import MountainPassList from "../components/MountainpassList";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -149,22 +149,10 @@ function MapPage() {
               inputProps={{ "aria-label": "controlled" }}
             />
           </section>
-
-          <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
-            {loadingFjelloverganger ? (
-              <Skeleton variant="rounded" height={"91vh"} />
-            ) : (
-              individualGeojsons?.map((mountainPassData: MountainPassData) => (
-                <MountainPassCard
-                  data={mountainPassData}
-                  key={mountainPassData.properties.id}
-                  selectPass={setSelectedPass}
-                  selectedPass={selectedPass}
-                  closed={passability?.passability}
-                />
-              ))
-            )}
-          </nav>
+          <MountainPassList
+            individualGeojsons={individualGeojsons?}
+            loadingFjelloverganger={loadingFjelloverganger}
+          />
         </div>
         <Map
           {...viewState}
