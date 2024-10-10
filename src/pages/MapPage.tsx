@@ -8,7 +8,6 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import MountainPassCard from "../components/MountainPassCard";
-import { MountainPassData } from "../types/mountainPassTypes";
 import { WeatherData } from "../types/dataTypes";
 import CameraCard from "../components/CameraCard";
 import {
@@ -19,6 +18,10 @@ import {
 } from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
+import { fetchAllCameras } from "../api/cameraApi";
+import { filterCameras } from "../utils/filterCameras";
+
+import { cameraData, MountainPassData } from "../types/mountainPassTypes";
 
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -50,6 +53,8 @@ function MapPage() {
     loading: passabilityLoading,
   } = useFetch(fetchPassabillity);
 
+  const { data: cameraData } = useFetch(fetchAllCameras);
+
   const [showAll, setShowAll] = useState<boolean>(true);
 
   const [finishedZoom, setFinishedZoom] = useState<boolean>(false);
@@ -57,6 +62,8 @@ function MapPage() {
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>();
+
+  const [cameras, setCameras] = useState<cameraData[] | null>(null);
 
   const [selectedPass, setSelectedPass] = useState<MountainPassData | null>(
     null
@@ -112,6 +119,12 @@ function MapPage() {
       }
     }
   }, [selectedPass]);
+
+  useEffect(() => {
+    if (individualGeojsons) {
+      setCameras(filterCameras(cameraData, individualGeojsons));
+    }
+  }, [individualGeojsons]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -191,7 +204,10 @@ function MapPage() {
                     >
                       <CameraCard
                         imgSrc={
-                          "https://webkamera.atlas.vegvesen.no/public/kamera?id=3000545_1"
+                          cameras?.find(
+                            (camera) =>
+                              camera.sted === selectedPass.properties.navn
+                          )?.kameraId || null
                         }
                         fjell={selectedPass.properties.navn}
                         weatherData={weatherData}

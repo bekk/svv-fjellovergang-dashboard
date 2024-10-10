@@ -21,3 +21,8 @@ export type MountainPassType = {
   senter: GeoJSON.Point;
   wkt: string;
 };
+
+export type cameraData = {
+  kameraId: string;
+  sted: string;
+};
