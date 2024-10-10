@@ -64,9 +64,9 @@ function MountainPassCard({
             }
           />
           <Chip
-            icon={<Circle color="success" />}
+            icon={<Circle color={closed ? "error" : "success"} />}
             label={closed ? "Stengt" : "Åpen"}
-            sx={{ backgroundColor: "#a2f1c4" }}
+            sx={{ backgroundColor: closed ? "#693030" : "#306948" }}
           />
         </Box>
       </Box>
