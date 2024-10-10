@@ -10,20 +10,22 @@ import { Thermostat, Air, Thunderstorm } from "@mui/icons-material";
 import { WeatherData } from "../types/dataTypes";
 
 interface CameraCardProps {
-  imgSrc: string;
+  cameraId: string | null;
   fjell: string;
   weatherData: WeatherData;
 }
 
-function CameraCard({ imgSrc, fjell, weatherData }: CameraCardProps) {
+function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
   return (
     <Card>
-      <CardMedia
-        component="img"
-        alt="Traffik kamera"
-        height="300"
-        image={imgSrc}
-      />
+      {cameraId && (
+        <CardMedia
+          component="img"
+          alt="Traffik kamera"
+          height="300"
+          image={`https://webkamera.atlas.vegvesen.no/public/kamera?id=${cameraId}`}
+        />
+      )}
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {fjell}
