@@ -203,7 +203,7 @@ function MapPage() {
                       latitude={selectedPass.properties.senter.coordinates[1]}
                     >
                       <CameraCard
-                        imgSrc={
+                        cameraId={
                           cameras?.find(
                             (camera) =>
                               camera.sted === selectedPass.properties.navn

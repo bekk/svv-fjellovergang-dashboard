@@ -10,7 +10,3 @@ const apiClient = axios.create({
 export const fetchAllCameras = () => {
   return apiClient.get("/kameradatagruppert");
 };
-
-export const fetchCamera = (id: number) => {
-  return apiClient.get(`/kamera?id=${id}`);
-};
