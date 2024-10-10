@@ -42,12 +42,6 @@ function MapPage() {
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
 
   const {
-    data: prediction,
-    error: predictionError,
-    loading: predictionLoading,
-  } = useFetch(fetchPrediction);
-
-  const {
     data: passability,
     error: passabilityError,
     loading: passabilityLoading,
@@ -164,8 +158,6 @@ function MapPage() {
                 <MountainPassCard
                   data={mountainPassData}
                   key={mountainPassData.properties.id}
-                  prediction={prediction}
-                  predictionLoading={predictionLoading}
                   selectPass={setSelectedPass}
                   selectedPass={selectedPass}
                   closed={passability?.passability}

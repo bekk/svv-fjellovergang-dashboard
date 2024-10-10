@@ -7,8 +7,8 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchPrediction = () => {
-  return apiClient.get("/getPredictions");
+export const fetchPrediction = (id: string) => {
+  return apiClient.get(`/getPredictions/${id}`);
 };
 
 export const fetchAllMountainPasses = () => {
