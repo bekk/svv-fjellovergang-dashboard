@@ -28,7 +28,7 @@ function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
 
       {loading ? (
         <Skeleton variant="rounded" width={210} height={300} />
-      ) : (
+      ) : prediction.length > 0 ? (
         prediction.map((hour, index) => (
           <Stack key={index} direction={"row"} spacing={7}>
             <Typography>{hour.datetime.split(" ")[1]}</Typography>
@@ -38,6 +38,8 @@ function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
             />
           </Stack>
         ))
+      ) : (
+        <Typography>Ingen prediksjon enda, desverre</Typography>
       )}
     </Stack>
   );
