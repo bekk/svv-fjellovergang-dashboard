@@ -149,10 +149,15 @@ function MapPage() {
               inputProps={{ "aria-label": "controlled" }}
             />
           </section>
-          <MountainPassList
-            individualGeojsons={individualGeojsons?}
-            loadingFjelloverganger={loadingFjelloverganger}
-          />
+          {individualGeojsons && (
+            <MountainPassList
+              mountainPasses={individualGeojsons}
+              loadingFjelloverganger={loadingFjelloverganger}
+              selectedPass={selectedPass}
+              setSelectedPass={setSelectedPass}
+              passability={passability}
+            />
+          )}
         </div>
         <Map
           {...viewState}

@@ -4,20 +4,28 @@ import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassCard from "./MountainPassCard";
 
 interface MountainPassListProps {
-  individualGeojsons: MountainPassData[];
+  mountainPasses: MountainPassData[];
   loadingFjelloverganger: boolean;
+  selectedPass: MountainPassData | null;
+  setSelectedPass: React.Dispatch<
+    React.SetStateAction<MountainPassData | null>
+  >;
+  passability: any;
 }
 
 function MountainPassList({
-  individualGeojsons,
+  mountainPasses,
   loadingFjelloverganger,
+  selectedPass,
+  setSelectedPass,
+  passability,
 }: MountainPassListProps) {
   return (
     <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
       {loadingFjelloverganger ? (
         <Skeleton variant="rounded" height={"91vh"} />
       ) : (
-        individualGeojsons.map((mountainPassData: MountainPassData) => (
+        mountainPasses.map((mountainPassData: MountainPassData) => (
           <MountainPassCard
             data={mountainPassData}
             key={mountainPassData.properties.id}
