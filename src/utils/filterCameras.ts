@@ -1,9 +1,9 @@
-import { MountainPassData } from "../types/mountainPassTypes";
+import { cameraData, MountainPassData } from "../types/mountainPassTypes";
 
 export const filterCameras = (
   data: any,
   mountainPassList: MountainPassData[]
-): any[] => {
+): cameraData[] => {
   return Object.keys(data).flatMap((key) =>
     data[key]
       .filter((entry: any) =>
