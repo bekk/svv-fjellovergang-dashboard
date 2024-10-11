@@ -41,12 +41,6 @@ function MapPage() {
     loading: loadingFjelloverganger,
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
 
-  const {
-    data: passability,
-    error: passabilityError,
-    loading: passabilityLoading,
-  } = useFetch(fetchPassabillity);
-
   const { data: cameraData } = useFetch(fetchAllCameras);
 
   const [showAll, setShowAll] = useState<boolean>(true);
@@ -160,7 +154,6 @@ function MapPage() {
                   key={mountainPassData.properties.id}
                   selectPass={setSelectedPass}
                   selectedPass={selectedPass}
-                  closed={passability?.passability}
                 />
               ))
             )}
