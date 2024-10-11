@@ -2,8 +2,6 @@ import { Card, Typography, Chip, Box, Collapse, Divider } from "@mui/material";
 import { KeyboardArrowRight, Circle } from "@mui/icons-material";
 import { MountainPassData } from "../types/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
-import CardStats from "./CardStats";
-import { predictions } from "../types/PredictionTypes";
 import { Dispatch, SetStateAction } from "react";
 import { fetchPassabillity, fetchPrediction } from "../api/api";
 import useFetch from "../hooks/useFetch";
@@ -12,14 +10,12 @@ interface MountainPassCardProps {
   data: MountainPassData;
   selectPass: Dispatch<SetStateAction<MountainPassData | null>>;
   selectedPass: MountainPassData | null;
-  closed?: boolean;
 }
 
 function MountainPassCard({
   data,
   selectPass,
   selectedPass,
-  closed,
 }: MountainPassCardProps) {
   const isOpen = selectedPass?.properties.id === data.properties.id;
   const handleCardClick = () =>
@@ -78,7 +74,9 @@ function MountainPassCard({
           <Chip
             icon={<Circle color={isMountainPassClosed ? "error" : "success"} />}
             label={isMountainPassClosed ? "Stengt" : "Åpen"}
-            sx={{ backgroundColor: isMountainPassClosed ? "#693030" : "#306948" }}
+            sx={{
+              backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
+            }}
           />
         </Box>
       </Box>
