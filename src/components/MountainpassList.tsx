@@ -1,11 +1,10 @@
-import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
-import { predictions } from "../types/PredictionTypes";
+import { Skeleton } from "@mui/material";
 import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassCard from "./MountainPassCard";
 
 interface MountainPassListProps {
   mountainPasses: MountainPassData[];
-  loadingFjelloverganger: boolean;
+  loadingMountainPasses: boolean;
   selectedPass: MountainPassData | null;
   setSelectedPass: React.Dispatch<
     React.SetStateAction<MountainPassData | null>
@@ -15,14 +14,14 @@ interface MountainPassListProps {
 
 function MountainPassList({
   mountainPasses,
-  loadingFjelloverganger,
+  loadingMountainPasses,
   selectedPass,
   setSelectedPass,
   passability,
 }: MountainPassListProps) {
   return (
     <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
-      {loadingFjelloverganger ? (
+      {loadingMountainPasses ? (
         <Skeleton variant="rounded" height={"91vh"} />
       ) : (
         mountainPasses.map((mountainPassData: MountainPassData) => (

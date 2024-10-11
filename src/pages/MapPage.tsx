@@ -1,15 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
-import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Switch, Typography, IconButton, Skeleton } from "@mui/material";
+import { Switch, Typography, IconButton } from "@mui/material";
 import { LightMode, DarkMode } from "@mui/icons-material";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-import MountainPassCard from "../components/MountainPassCard";
 import { WeatherData } from "../types/dataTypes";
-import CameraCard from "../components/CameraCard";
+
 import {
   fetchAllMountainPasses,
   fetchPassabillity,
@@ -22,8 +20,8 @@ import { filterCameras } from "../utils/filterCameras";
 
 import { cameraData, MountainPassData } from "../types/mountainPassTypes";
 import MountainPassList from "../components/MountainpassList";
-
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
+import MountainMap from "../components/MountainMap";
+import { ViewState } from "react-map-gl";
 
 const initialViewState: ViewState = {
   longitude: 8.4999235,
@@ -55,7 +53,7 @@ function MapPage() {
 
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
-  const [weatherData, setWeatherData] = useState<WeatherData | null>();
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
 
   const [cameras, setCameras] = useState<cameraData[] | null>(null);
 
@@ -152,90 +150,25 @@ function MapPage() {
           {individualGeojsons && (
             <MountainPassList
               mountainPasses={individualGeojsons}
-              loadingFjelloverganger={loadingFjelloverganger}
+              loadingMountainPasses={loadingFjelloverganger}
               selectedPass={selectedPass}
               setSelectedPass={setSelectedPass}
               passability={passability}
             />
           )}
         </div>
-        <Map
-          {...viewState}
-          ref={mapRef}
-          mapStyle={
-            darkMode
-              ? "mapbox://styles/mapbox/dark-v11"
-              : "mapbox://styles/mapbox/light-v11"
-          }
-          mapboxAccessToken={MAPBOX_TOKEN}
-          onMove={(e) => setViewState(e.viewState)}
-          style={{ flex: "3", height: "100%", width: "100%" }}
-        >
-          {showAll ? (
-            individualGeojsons?.map((mountainPassData: MountainPassData) => (
-              <Source
-                id={mountainPassData.properties.id.toString()}
-                type="geojson"
-                data={mountainPassData}
-                key={mountainPassData.properties.id}
-              >
-                {selectedPass &&
-                  finishedZoom &&
-                  weatherData &&
-                  selectedPass.properties.senter && (
-                    <Marker
-                      longitude={selectedPass.properties.senter.coordinates[0]}
-                      latitude={selectedPass.properties.senter.coordinates[1]}
-                    >
-                      <CameraCard
-                        cameraId={
-                          cameras?.find(
-                            (camera) =>
-                              camera.sted === selectedPass.properties.navn
-                          )?.kameraId || null
-                        }
-                        fjell={selectedPass.properties.navn}
-                        weatherData={weatherData}
-                      />
-                    </Marker>
-                  )}
-                <Layer
-                  id={`route-layer-${mountainPassData.properties.id}`}
-                  type="line"
-                  layout={{ "line-cap": "round", "line-join": "round" }}
-                  paint={
-                    mountainPassData.properties.strekningsType ===
-                    "Fjellovergang"
-                      ? { "line-color": "#FF9999", "line-width": 2 }
-                      : { "line-color": "#99CCFF", "line-width": 2 }
-                  }
-                />
-              </Source>
-            ))
-          ) : (
-            <></>
-          )}
-          {selectedPass && !showAll ? (
-            <Source
-              id="mountain-pass-source"
-              type="geojson"
-              data={selectedPass}
-            >
-              <Layer
-                id="mountain-pass-layer"
-                type="line"
-                layout={{ "line-cap": "round", "line-join": "round" }}
-                paint={
-                  selectedPass.properties.strekningsType === "Fjellovergang"
-                    ? { "line-color": "#FF9999", "line-width": 2 }
-                    : { "line-color": "#99CCFF", "line-width": 2 }
-                }
-              />
-            </Source>
-          ) : (
-            <></>
-          )}
-        </Map>
+        <MountainMap
+          viewState={viewState}
+          setViewState={setViewState}
+          darkMode={darkMode}
+          mapRef={mapRef}
+          showAll={showAll}
+          individualGeojsons={individualGeojsons}
+          selectedPass={selectedPass}
+          finishedZoom={finishedZoom}
+          weatherData={weatherData}
+          cameras={cameras}
+        />
       </div>
     </ThemeProvider>
   );
