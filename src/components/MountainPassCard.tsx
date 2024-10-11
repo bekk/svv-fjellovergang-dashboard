@@ -94,7 +94,7 @@ function MountainPassCard({
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
 
         <Typography variant="h6">Prognose</Typography>
-        <PrognoseCard prediction={prediction} loading={predictionLoading} />
+        <PrognoseCard predictions={prediction} loading={predictionLoading} />
       </Collapse>
     </Card>
   );
