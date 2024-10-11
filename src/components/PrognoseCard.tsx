@@ -1,11 +1,12 @@
 import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
 import { predictions } from "../types/PredictionTypes";
+import { isToday, isTomorrow } from "../utils/dateCheckers";
 
 const LAV = 0.2;
 const MEDIUM = 0.5;
 
 interface ProgniseCardProps {
-  prediction: predictions[];
+  predictions: predictions[];
   loading: boolean;
 }
 
@@ -19,25 +20,48 @@ const getPredictionColor = (prediction: number): string => {
   }
 };
 
-function PrognoseCard({ prediction, loading }: ProgniseCardProps) {
+function PrognoseCard({ predictions, loading }: ProgniseCardProps) {
+
   return (
     <Stack spacing={2}>
       <Typography>Risiko for stenging på grunn av vær</Typography>
 
-      <Typography variant="subtitle1">I dag</Typography>
+      
 
       {loading ? (
         <Skeleton variant="rounded" width={210} height={300} />
-      ) : prediction.length > 0 ? (
-        prediction.map((hour, index) => (
-          <Stack key={index} direction={"row"} spacing={7}>
-            <Typography>{hour.datetime.split(" ")[1]}</Typography>
-            <Chip
-              label={hour.prediction.toFixed(4)}
-              sx={{ backgroundColor: getPredictionColor(hour.prediction) }}
-            />
-          </Stack>
-        ))
+      ) : predictions.length > 0 ? (
+        <>
+          <Typography variant="subtitle1">I dag</Typography>
+          {predictions.map((prediction, index) => {
+            if (isToday(prediction.datetime)) {
+              return (
+                <Stack key={index} direction={"row"} spacing={7}>
+                  <Typography>{prediction.datetime.split(" ")[1]}</Typography>
+                  <Chip
+                    label={prediction.prediction.toFixed(4)}
+                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                  />
+                </Stack>
+              )
+            }
+          })}
+
+          <Typography variant="subtitle1">I morgen</Typography>
+          {predictions.map((prediction, index) => {
+            if (isTomorrow(prediction.datetime)) {
+              return (
+                <Stack key={index} direction={"row"} spacing={7}>
+                  <Typography>{prediction.datetime.split(" ")[1]}</Typography>
+                  <Chip
+                    label={prediction.prediction.toFixed(4)}
+                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                  />
+                </Stack>
+              )
+            }
+          })}
+        </>
       ) : (
         <Typography>Ingen prediksjon enda, desverre</Typography>
       )}
