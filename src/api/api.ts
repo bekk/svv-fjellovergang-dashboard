@@ -23,6 +23,6 @@ export const fetchWeatherData = (lat: number, lon: number) => {
   return apiClient.get(`/getCurrentWeather?lat=${lat}&lon=${lon}`);
 };
 
-export const fetchPassabillity = () => {
-  return apiClient.get("/getCurrentPassability");
+export const fetchPassabillity = (id: number) => {
+  return apiClient.get(`/getCurrentPassability/${id}`);
 };
