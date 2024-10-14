@@ -14,6 +14,8 @@ interface MountainMapProps {
   selectedPass: MountainPassData | null;
   finishedZoom: boolean;
   weatherData: WeatherData | null;
+  weatherLoading: boolean;
+  weatherError: boolean;
 }
 
 const DARK_MAP = "mapbox://styles/mapbox/dark-v11";
@@ -30,6 +32,8 @@ function MountainMap({
   selectedPass,
   finishedZoom,
   weatherData,
+  weatherLoading,
+  weatherError,
 }: MountainMapProps) {
   return (
     <Map
@@ -57,6 +61,8 @@ function MountainMap({
                   cameraId={selectedPass.properties.id}
                   fjell={selectedPass.properties.navn}
                   weatherData={weatherData}
+                  weatherLoading={weatherLoading}
+                  weatherError={weatherError}
                 />
               </Marker>
             )}
