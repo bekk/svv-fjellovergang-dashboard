@@ -71,13 +71,19 @@ function MountainPassCard({
               data.properties.veiKategori + "." + data.properties.veiNummer
             }
           />
-          <Chip
-            icon={<Circle color={isMountainPassClosed ? "error" : "success"} />}
-            label={isMountainPassClosed ? "Stengt" : "Åpen"}
-            sx={{
-              backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
-            }}
-          />
+          {passabilityLoading ? (
+            <Chip icon={<Circle />} label={"Loading"} />
+          ) : (
+            <Chip
+              icon={
+                <Circle color={isMountainPassClosed ? "error" : "success"} />
+              }
+              label={isMountainPassClosed ? "Stengt" : "Åpen"}
+              sx={{
+                backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
+              }}
+            />
+          )}
         </Box>
       </Box>
 

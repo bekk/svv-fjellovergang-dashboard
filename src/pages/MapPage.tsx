@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Switch, Typography, IconButton } from "@mui/material";
+import { Switch, Typography, IconButton, Skeleton } from "@mui/material";
 import { LightMode, DarkMode } from "@mui/icons-material";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -40,6 +40,8 @@ function MapPage() {
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
+  const [weatherLoading, setWeatherLoading] = useState<boolean>(true);
+  const [weatherError, setWeatherError] = useState<boolean>(false);
 
   const [selectedPass, setSelectedPass] = useState<MountainPassData | null>(
     null
@@ -57,6 +59,9 @@ function MapPage() {
     const getWeatherData = async () => {
       try {
         if (selectedPass !== null) {
+          setWeatherLoading(true);
+          setWeatherError(false);
+
           const weatherData = await fetchWeatherData(
             selectedPass.properties.senter.coordinates[0],
             selectedPass.properties.senter.coordinates[1]
@@ -67,6 +72,9 @@ function MapPage() {
         }
       } catch (error) {
         console.error("Error fetching weather data:", error);
+        setWeatherError(true);
+      } finally {
+        setWeatherLoading(false);
       }
     };
     getWeatherData();
@@ -125,10 +133,12 @@ function MapPage() {
               inputProps={{ "aria-label": "controlled" }}
             />
           </section>
+          {loadingFjelloverganger && (
+            <Skeleton variant="rounded" height={"91vh"} />
+          )}
           {individualGeojsons && (
             <MountainPassList
               mountainPasses={individualGeojsons}
-              loadingMountainPasses={loadingFjelloverganger}
               selectedPass={selectedPass}
               setSelectedPass={setSelectedPass}
             />
@@ -144,6 +154,8 @@ function MapPage() {
           selectedPass={selectedPass}
           finishedZoom={finishedZoom}
           weatherData={weatherData}
+          weatherLoading={weatherLoading}
+          weatherError={weatherError}
         />
       </div>
     </ThemeProvider>

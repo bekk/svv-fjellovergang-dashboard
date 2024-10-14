@@ -4,7 +4,6 @@ import MountainPassCard from "./MountainPassCard";
 
 interface MountainPassListProps {
   mountainPasses: MountainPassData[];
-  loadingMountainPasses: boolean;
   selectedPass: MountainPassData | null;
   setSelectedPass: React.Dispatch<
     React.SetStateAction<MountainPassData | null>
@@ -13,24 +12,19 @@ interface MountainPassListProps {
 
 function MountainPassList({
   mountainPasses,
-  loadingMountainPasses,
   selectedPass,
   setSelectedPass,
 }: MountainPassListProps) {
   return (
     <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
-      {loadingMountainPasses ? (
-        <Skeleton variant="rounded" height={"91vh"} />
-      ) : (
-        mountainPasses.map((mountainPassData: MountainPassData) => (
-          <MountainPassCard
-            data={mountainPassData}
-            key={mountainPassData.properties.id}
-            selectPass={setSelectedPass}
-            selectedPass={selectedPass}
-          />
-        ))
-      )}
+      {mountainPasses.map((mountainPassData: MountainPassData) => (
+        <MountainPassCard
+          data={mountainPassData}
+          key={mountainPassData.properties.id}
+          selectPass={setSelectedPass}
+          selectedPass={selectedPass}
+        />
+      ))}
     </nav>
   );
 }
