@@ -5,6 +5,7 @@ import {
   Stack,
   CardMedia,
   CardContent,
+  Skeleton,
 } from "@mui/material";
 import { Thermostat, Air, Thunderstorm } from "@mui/icons-material";
 import { WeatherData } from "../types/dataTypes";
@@ -23,9 +24,17 @@ interface CameraCardProps {
   cameraId: number;
   fjell: string;
   weatherData: WeatherData | null;
+  weatherLoading: boolean;
+  weatherError: boolean;
 }
 
-function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
+function CameraCard({
+  cameraId,
+  fjell,
+  weatherData,
+  weatherLoading,
+  weatherError,
+}: CameraCardProps) {
   return (
     <Card>
       <CardMedia
@@ -39,18 +48,23 @@ function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
         <Typography gutterBottom variant="h5" component="div">
           {fjell}
         </Typography>
-        <Stack direction={"row"} spacing={2}>
-          {weatherData && weatherData.temperature && (
-            <Chip
-              label={weatherData.temperature + "°C"}
-              icon={<Thermostat />}
-            />
-          )}
-          {weatherData && weatherData.windSpeed && (
-            <Chip label={weatherData.windSpeed + "m/s"} icon={<Air />} />
-          )}
-          {false ? <Chip label={"null"} icon={<Thunderstorm />} /> : <></>}
-        </Stack>
+        {weatherLoading && <Skeleton variant="rounded" width={"25vh"} />}
+        {weatherError ? (
+          <Typography>Error fetching weather data, try again later</Typography>
+        ) : (
+          <Stack direction={"row"} spacing={2}>
+            {weatherData && weatherData.temperature && (
+              <Chip
+                label={weatherData.temperature + "°C"}
+                icon={<Thermostat />}
+              />
+            )}
+            {weatherData && weatherData.windSpeed && (
+              <Chip label={weatherData.windSpeed + "m/s"} icon={<Air />} />
+            )}
+            {false ? <Chip label={"null"} icon={<Thunderstorm />} /> : <></>}
+          </Stack>
+        )}
       </CardContent>
     </Card>
   );
