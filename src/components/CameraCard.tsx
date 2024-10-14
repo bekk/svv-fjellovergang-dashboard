@@ -22,7 +22,7 @@ const cameras: { [id: number]: string } = {
 interface CameraCardProps {
   cameraId: number;
   fjell: string;
-  weatherData: WeatherData;
+  weatherData: WeatherData | null;
 }
 
 function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
@@ -40,13 +40,13 @@ function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
           {fjell}
         </Typography>
         <Stack direction={"row"} spacing={2}>
-          {weatherData.temperature && (
+          {weatherData && weatherData.temperature && (
             <Chip
               label={weatherData.temperature + "°C"}
               icon={<Thermostat />}
             />
           )}
-          {weatherData.windSpeed && (
+          {weatherData && weatherData.windSpeed && (
             <Chip label={weatherData.windSpeed + "m/s"} icon={<Air />} />
           )}
           {false ? <Chip label={"null"} icon={<Thunderstorm />} /> : <></>}
