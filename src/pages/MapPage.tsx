@@ -12,7 +12,6 @@ import { fetchAllMountainPasses, fetchWeatherData } from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 import { fetchAllCameras } from "../api/cameraApi";
-import { filterCameras } from "../utils/filterCameras";
 
 import { cameraData, MountainPassData } from "../types/mountainPassTypes";
 import MountainPassList from "../components/MountainpassList";
@@ -44,8 +43,6 @@ function MapPage() {
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-
-  const [cameras, setCameras] = useState<cameraData[] | null>(null);
 
   const [selectedPass, setSelectedPass] = useState<MountainPassData | null>(
     null
@@ -102,12 +99,6 @@ function MapPage() {
     }
   }, [selectedPass]);
 
-  useEffect(() => {
-    if (individualGeojsons) {
-      setCameras(filterCameras(cameraData, individualGeojsons));
-    }
-  }, [individualGeojsons]);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -156,7 +147,6 @@ function MapPage() {
           selectedPass={selectedPass}
           finishedZoom={finishedZoom}
           weatherData={weatherData}
-          cameras={cameras}
         />
       </div>
     </ThemeProvider>
