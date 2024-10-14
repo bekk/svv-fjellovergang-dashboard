@@ -48,8 +48,9 @@ function CameraCard({
         <Typography gutterBottom variant="h5" component="div">
           {fjell}
         </Typography>
-        {weatherLoading && <Skeleton variant="rounded" width={"25vh"} />}
-        {weatherError ? (
+        {weatherLoading ? (
+          <Skeleton variant="rounded" width={"25vh"} />
+        ) : weatherError ? (
           <Typography>Error fetching weather data, try again later</Typography>
         ) : (
           <Stack direction={"row"} spacing={2}>
