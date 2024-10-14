@@ -48,21 +48,18 @@ function MountainMap({
             data={mountainPassData}
             key={mountainPassData.properties.id}
           >
-            {selectedPass &&
-              finishedZoom &&
-              weatherData &&
-              selectedPass.properties.senter && (
-                <Marker
-                  longitude={selectedPass.properties.senter.coordinates[0]}
-                  latitude={selectedPass.properties.senter.coordinates[1]}
-                >
-                  <CameraCard
-                    cameraId={selectedPass.properties.id}
-                    fjell={selectedPass.properties.navn}
-                    weatherData={weatherData}
-                  />
-                </Marker>
-              )}
+            {selectedPass && finishedZoom && selectedPass.properties.senter && (
+              <Marker
+                longitude={selectedPass.properties.senter.coordinates[0]}
+                latitude={selectedPass.properties.senter.coordinates[1]}
+              >
+                <CameraCard
+                  cameraId={selectedPass.properties.id}
+                  fjell={selectedPass.properties.navn}
+                  weatherData={weatherData}
+                />
+              </Marker>
+            )}
             <Layer
               id={`route-layer-${mountainPassData.properties.id}`}
               type="line"
