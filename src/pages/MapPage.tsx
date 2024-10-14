@@ -11,9 +11,8 @@ import { WeatherData } from "../types/dataTypes";
 import { fetchAllMountainPasses, fetchWeatherData } from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
-import { fetchAllCameras } from "../api/cameraApi";
 
-import { cameraData, MountainPassData } from "../types/mountainPassTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassList from "../components/MountainpassList";
 import MountainMap from "../components/MountainMap";
 import { ViewState } from "react-map-gl";
@@ -33,8 +32,6 @@ function MapPage() {
     error: geoError,
     loading: loadingFjelloverganger,
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
-
-  const { data: cameraData } = useFetch(fetchAllCameras);
 
   const [showAll, setShowAll] = useState<boolean>(true);
 

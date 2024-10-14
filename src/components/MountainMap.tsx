@@ -1,6 +1,6 @@
 import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 
-import { cameraData, MountainPassData } from "../types/mountainPassTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
 import { WeatherData } from "../types/dataTypes";
 import CameraCard from "./CameraCard";
 
