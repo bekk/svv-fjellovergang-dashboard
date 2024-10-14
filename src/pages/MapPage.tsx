@@ -131,7 +131,6 @@ function MapPage() {
           {individualGeojsons && (
             <MountainPassList
               mountainPasses={individualGeojsons}
-              loadingMountainPasses={loadingFjelloverganger}
               selectedPass={selectedPass}
               setSelectedPass={setSelectedPass}
             />
