@@ -28,14 +28,13 @@ interface CameraCardProps {
 function CameraCard({ cameraId, fjell, weatherData }: CameraCardProps) {
   return (
     <Card>
-      {cameraId && (
-        <CardMedia
-          component="img"
-          alt="Traffik kamera"
-          height="300"
-          image={`https://webkamera.atlas.vegvesen.no/public/kamera?id=${cameras[cameraId]}`}
-        />
-      )}
+      <CardMedia
+        component="img"
+        alt="Traffik kamera"
+        height="300"
+        image={`https://webkamera.atlas.vegvesen.no/public/kamera?id=${cameras[cameraId]}`}
+      />
+
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {fjell}
