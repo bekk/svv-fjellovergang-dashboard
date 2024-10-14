@@ -1,6 +1,6 @@
 import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 
-import { cameraData, MountainPassData } from "../types/mountainPassTypes";
+import { MountainPassData } from "../types/mountainPassTypes";
 import { WeatherData } from "../types/dataTypes";
 import CameraCard from "./CameraCard";
 
@@ -14,7 +14,6 @@ interface MountainMapProps {
   selectedPass: MountainPassData | null;
   finishedZoom: boolean;
   weatherData: WeatherData | null;
-  cameras: cameraData[] | null;
 }
 
 const DARK_MAP = "mapbox://styles/mapbox/dark-v11";
@@ -31,7 +30,6 @@ function MountainMap({
   selectedPass,
   finishedZoom,
   weatherData,
-  cameras,
 }: MountainMapProps) {
   return (
     <Map
@@ -59,11 +57,7 @@ function MountainMap({
                   latitude={selectedPass.properties.senter.coordinates[1]}
                 >
                   <CameraCard
-                    cameraId={
-                      cameras?.find(
-                        (camera) => camera.sted === selectedPass.properties.navn
-                      )?.kameraId || null
-                    }
+                    cameraId={selectedPass.properties.id}
                     fjell={selectedPass.properties.navn}
                     weatherData={weatherData}
                   />

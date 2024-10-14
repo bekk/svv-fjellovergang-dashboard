@@ -22,11 +22,6 @@ export type MountainPassType = {
   wkt: string;
 };
 
-export type cameraData = {
-  kameraId: string;
-  sted: string;
-};
-
 export type Passabillity = {
   id: number;
   passability: boolean;
