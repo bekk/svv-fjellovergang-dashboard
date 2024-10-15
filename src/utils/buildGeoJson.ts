@@ -9,8 +9,6 @@ export const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
       properties: {
         id: feature.id,
         navn: feature.navn,
-        overgangsType: feature.overgangstype,
-        antallFylker: feature.antallFylker,
         veiKategori: feature.veiKategori,
         veiNummer: feature.veiNummer,
         strekningsType: feature.strekningsType,
@@ -19,6 +17,7 @@ export const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
         lokaltFra: feature.lokaltFra,
         lokaltTil: feature.lokaltTil,
         senter: wellknown.parse(feature.senter) as GeoJSON.Point,
+        passability: feature.passability,
         wkt: feature.wkt,
       },
     };

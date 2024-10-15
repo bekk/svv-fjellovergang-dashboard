@@ -3,7 +3,7 @@ import { KeyboardArrowRight, Circle } from "@mui/icons-material";
 import { MountainPassData } from "../types/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import { Dispatch, SetStateAction } from "react";
-import { fetchPassabillity, fetchPrediction } from "../api/api";
+import { fetchPrediction } from "../api/api";
 import useFetch from "../hooks/useFetch";
 
 interface MountainPassCardProps {
@@ -29,13 +29,7 @@ function MountainPassCard({
     loading: predictionLoading,
   } = useFetch(() => fetchPrediction(data.properties.id.toString()));
 
-  const {
-    data: passability,
-    error: passabilityError,
-    loading: passabilityLoading,
-  } = useFetch(() => fetchPassabillity(data.properties.id));
-
-  const isMountainPassClosed = passability?.passability;
+  const isMountainPassClosed = data.properties.passability;
 
   return (
     <Card
@@ -71,19 +65,13 @@ function MountainPassCard({
               data.properties.veiKategori + "." + data.properties.veiNummer
             }
           />
-          {passabilityLoading ? (
-            <Chip icon={<Circle />} label={"Loading"} />
-          ) : (
-            <Chip
-              icon={
-                <Circle color={isMountainPassClosed ? "error" : "success"} />
-              }
-              label={isMountainPassClosed ? "Stengt" : "Åpen"}
-              sx={{
-                backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
-              }}
-            />
-          )}
+          <Chip
+            icon={<Circle color={isMountainPassClosed ? "error" : "success"} />}
+            label={isMountainPassClosed ? "Stengt" : "Åpen"}
+            sx={{
+              backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
+            }}
+          />
         </Box>
       </Box>
 

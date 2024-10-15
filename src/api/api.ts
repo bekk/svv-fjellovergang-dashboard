@@ -12,7 +12,7 @@ export const fetchPrediction = (id: string) => {
 };
 
 export const fetchAllMountainPasses = () => {
-  return apiClient.get("/getRelevantMountainPasses");
+  return apiClient.get("/getRelevantMountainPassesWithPassability");
 };
 
 export const fetchMountainPasses = (id: string) => {

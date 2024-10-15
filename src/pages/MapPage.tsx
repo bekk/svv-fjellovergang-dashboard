@@ -14,7 +14,7 @@ import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
 import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassList from "../components/MountainpassList";
-import MountainMap from "../components/MountainMap";
+import MountainMap from "../components/map/MountainMap";
 import { ViewState } from "react-map-gl";
 
 const initialViewState: ViewState = {
@@ -150,7 +150,8 @@ function MapPage() {
           darkMode={darkMode}
           mapRef={mapRef}
           showAll={showAll}
-          individualGeojsons={individualGeojsons}
+          mountainpassData={individualGeojsons}
+          mountainpassLoading={loadingFjelloverganger}
           selectedPass={selectedPass}
           finishedZoom={finishedZoom}
           weatherData={weatherData}

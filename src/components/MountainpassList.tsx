@@ -1,4 +1,3 @@
-import { Skeleton } from "@mui/material";
 import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassCard from "./MountainPassCard";
 
