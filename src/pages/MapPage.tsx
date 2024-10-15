@@ -8,11 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import { WeatherData } from "../types/dataTypes";
 
-import {
-  fetchAllMountainPasses,
-  fetchPassabillity,
-  fetchWeatherData,
-} from "../api/api";
+import { fetchAllMountainPasses, fetchWeatherData } from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
