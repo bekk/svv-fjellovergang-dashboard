@@ -8,13 +8,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import { WeatherData } from "../types/dataTypes";
 
-import { fetchAllMountainPasses, fetchWeatherData } from "../api/api";
+import {
+  fetchAllMountainPasses,
+  fetchPassabillity,
+  fetchWeatherData,
+} from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
 import { MountainPassData } from "../types/mountainPassTypes";
 import MountainPassList from "../components/MountainpassList";
-import MountainMap from "../components/MountainMap";
+import MountainMap from "../components/map/MountainMap";
 import { ViewState } from "react-map-gl";
 
 const initialViewState: ViewState = {
@@ -150,7 +154,8 @@ function MapPage() {
           darkMode={darkMode}
           mapRef={mapRef}
           showAll={showAll}
-          individualGeojsons={individualGeojsons}
+          mountainpassData={individualGeojsons}
+          mountainpassLoading={loadingFjelloverganger}
           selectedPass={selectedPass}
           finishedZoom={finishedZoom}
           weatherData={weatherData}

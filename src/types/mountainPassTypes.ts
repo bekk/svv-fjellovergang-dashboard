@@ -9,8 +9,6 @@ export interface MountainPassData {
 export type MountainPassType = {
   id: number;
   navn: string;
-  overgangsType: string;
-  antallFylker: number;
   veiKategori: string;
   veiNummer: number;
   strekningsType: string;
@@ -19,6 +17,7 @@ export type MountainPassType = {
   lokaltFra: string;
   lokaltTil: string;
   senter: GeoJSON.Point;
+  passability: boolean;
   wkt: string;
 };
 

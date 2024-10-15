@@ -8,7 +8,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { Thermostat, Air, Thunderstorm } from "@mui/icons-material";
-import { WeatherData } from "../types/dataTypes";
+import { WeatherData } from "../../types/dataTypes";
 
 const cameras: { [id: number]: string } = {
   638645987: "1829006_2",

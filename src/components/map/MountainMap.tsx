@@ -1,8 +1,9 @@
 import Map, { Layer, Source, ViewState, Marker } from "react-map-gl";
 
-import { MountainPassData } from "../types/mountainPassTypes";
-import { WeatherData } from "../types/dataTypes";
+import { MountainPassData } from "../../types/mountainPassTypes";
+import { WeatherData } from "../../types/dataTypes";
 import CameraCard from "./CameraCard";
+import MountainPassMapLines from "./MountainPassMapLines";
 
 interface MountainMapProps {
   viewState: ViewState;
@@ -10,7 +11,8 @@ interface MountainMapProps {
   darkMode: boolean;
   mapRef: React.MutableRefObject<any>;
   showAll: boolean;
-  individualGeojsons: MountainPassData[] | null;
+  mountainpassData: MountainPassData[] | null;
+  mountainpassLoading: boolean;
   selectedPass: MountainPassData | null;
   finishedZoom: boolean;
   weatherData: WeatherData | null;
@@ -28,7 +30,8 @@ function MountainMap({
   darkMode,
   mapRef,
   showAll,
-  individualGeojsons,
+  mountainpassData,
+  mountainpassLoading,
   selectedPass,
   finishedZoom,
   weatherData,
@@ -45,7 +48,7 @@ function MountainMap({
       style={{ flex: "3", height: "100%", width: "100%" }}
     >
       {showAll ? (
-        individualGeojsons?.map((mountainPassData: MountainPassData) => (
+        mountainpassData?.map((mountainPassData: MountainPassData) => (
           <Source
             id={mountainPassData.properties.id.toString()}
             type="geojson"
@@ -66,15 +69,10 @@ function MountainMap({
                 />
               </Marker>
             )}
-            <Layer
-              id={`route-layer-${mountainPassData.properties.id}`}
-              type="line"
-              layout={{ "line-cap": "round", "line-join": "round" }}
-              paint={
-                mountainPassData.properties.strekningsType === "Fjellovergang"
-                  ? { "line-color": "#FF9999", "line-width": 2 }
-                  : { "line-color": "#99CCFF", "line-width": 2 }
-              }
+            <MountainPassMapLines
+              mountainPassId={mountainPassData.properties.id}
+              isMountainPassClosed={mountainPassData.properties.passability}
+              loading={mountainpassLoading}
             />
           </Source>
         ))
