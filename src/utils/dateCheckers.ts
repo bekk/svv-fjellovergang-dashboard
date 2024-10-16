@@ -14,3 +14,13 @@ export const isToday = (datetime: string): boolean => {
 
     return givenDate.getDate() == today.getDate();
 };
+
+export const nextTimeInterval = (time: string): string => {
+  const timeMap: { [key: string]: string } = {
+    "00": "06:00",
+    "06": "12:00",
+    "12": "18:00",
+    "18": "00:00"
+  };
+  return timeMap[time];
+};
