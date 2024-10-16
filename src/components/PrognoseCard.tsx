@@ -22,32 +22,44 @@ const getPredictionColor = (prediction: number): string => {
   }
 };
 
+interface IdToName {
+  [id: number]: string;
+}
+
+const mountainPassIdNames: IdToName = {
+  91192878: "de11iq8bwnzlsb",     // Dovrefjell
+  638645987: "fdyg4nqolil1ce",    // Saltfjellet
+  915906244: "de11hkvh6x7uof",    // Haukelifjellet
+  761980521: "ee11ix6s6nrb4e",    // Hol - Aurland
+  81833493: "ee11iyx9l80zkc",     // Hardangervidda
+  79089974: "de11ikylzarcwb",     // Aurlandsfjellet
+  91141932: "fe11ivb8k05j4c"      // Geiranger - Langvatn
+};
+
 function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
 
   return (
     <Stack spacing={2}>
       <Typography>Risiko for stenging på grunn av vær</Typography>
 
-      {id===638645987 &&
-        <Typography
-          component="a"
-          href="https://gyda1210.grafana.net/d/fdyg4nqolil1ce/svv-fjelloverganger?from=2022-10-01T00:00:00.000Z&to=2023-05-31T23:00:00.000Z&timezone=utc&refresh="
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            fontWeight: "bold",
-            textDecoration: "none",
-            color: "primary.main",
-            display: "inline-flex",
-            "&:hover": {
-              color: "secondary.main",
-            },
-          }}
-        >
-          <LaunchOutlinedIcon sx={{ fontSize: 22, mr: 0.5 }} />
-          Detaljert visning
-        </Typography>
-      }
+      <Typography
+        component="a"
+        href={`https://gyda1210.grafana.net/d/${mountainPassIdNames[id]}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{
+          fontWeight: "bold",
+          textDecoration: "none",
+          color: "primary.main",
+          display: "inline-flex",
+          "&:hover": {
+            color: "secondary.main",
+          },
+        }}
+      >
+        <LaunchOutlinedIcon sx={{ fontSize: 22, mr: 0.5 }} />
+        Detaljert visning
+      </Typography>
 
       {loading ? (
         <Skeleton variant="rounded" width={210} height={300} />
