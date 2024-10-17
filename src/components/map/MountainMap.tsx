@@ -44,7 +44,6 @@ function MountainMap({
 }: MountainMapProps) {
   const { zoomTo, zoomOut, finishedZoom } = useMapZoom(mapRef);
   useEffect(() => {
-    console.log(selectedPass);
     if (selectedPass) {
       zoomTo(selectedPass.properties.senter.coordinates);
     } else {
