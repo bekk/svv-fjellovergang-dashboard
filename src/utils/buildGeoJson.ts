@@ -24,3 +24,24 @@ export const buildIndividualGeoJson = (data: any[]): MountainPassData[] => {
     return individualGeoJSON;
   });
 };
+
+export const buildGeoJsonFromClickedEvent = (feature: any) => {
+  return {
+    type: "Feature",
+    geometry: feature.geometry,
+    properties: {
+      id: feature.properties.id,
+      navn: feature.properties.navn,
+      veiKategori: feature.properties.veiKategori,
+      veiNummer: feature.properties.veiNummer,
+      strekningsType: feature.properties.strekningsType,
+      fra: feature.properties.fra,
+      til: feature.properties.til,
+      lokaltFra: feature.properties.lokaltFra,
+      lokaltTil: feature.properties.lokaltTil,
+      senter: JSON.parse(feature.properties.senter) as GeoJSON.Point,
+      passability: feature.properties.passability,
+      wkt: feature.properties.wkt,
+    },
+  };
+};
