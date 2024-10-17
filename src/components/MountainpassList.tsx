@@ -15,7 +15,7 @@ function MountainPassList({
   setSelectedPass,
 }: MountainPassListProps) {
   return (
-    <nav style={{ maxHeight: "100%", overflowY: "auto" }}>
+    <nav style={{position: "relative", maxHeight: "94vh", overflowY: "auto", overflowX: "hidden"}}>
       {mountainPasses.map((mountainPassData: MountainPassData) => (
         <MountainPassCard
           data={mountainPassData}

@@ -1,5 +1,5 @@
-import { Card, Typography, Chip, Box, Collapse, Divider } from "@mui/material";
-import { KeyboardArrowRight, Circle } from "@mui/icons-material";
+import { Card, Typography, Chip, Box, Collapse, Divider, Tooltip } from "@mui/material";
+import { KeyboardArrowRight, Circle, Warning} from "@mui/icons-material";
 import { MountainPassData } from "../types/mountainPassTypes";
 import PrognoseCard from "./PrognoseCard";
 import { Dispatch, SetStateAction } from "react";
@@ -32,6 +32,14 @@ function MountainPassCard({
   } = useFetch(() => fetchPrediction(data.properties.id.toString()));
 
   const isMountainPassClosed = data.properties.passability;
+
+  const isPredictionHigh = () => {
+    if (prediction !== null) {
+      return prediction.some((pred: any) => pred.prediction >= 0.5);
+    }
+    return false;
+  };
+  
 
   return (
     <Card
@@ -67,13 +75,21 @@ function MountainPassCard({
               data.properties.veiKategori + "." + data.properties.veiNummer
             }
           />
-          <Chip
-            icon={<Circle color={isMountainPassClosed ? "error" : "success"} />}
-            label={isMountainPassClosed ? "Stengt" : "Åpen"}
-            sx={{
-              backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
-            }}
-          />
+          
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {isPredictionHigh() && 
+              <Tooltip title="Det er muligens fare for stengning ved denne fjellovergangen" placement="top">
+                <Warning sx={{ color: "orange" }} />
+              </Tooltip>
+            }
+            <Chip
+              icon={<Circle color={isMountainPassClosed ? "error" : "success"} />}
+              label={isMountainPassClosed ? "Stengt" : "Åpen"}
+              sx={{
+                backgroundColor: isMountainPassClosed ? "#693030" : "#306948",
+              }}
+            />
+          </div>
         </Box>
       </Box>
 

@@ -73,15 +73,7 @@ function MountainMap({
               <Marker
                 longitude={selectedPass.properties.senter.coordinates[0]}
                 latitude={selectedPass.properties.senter.coordinates[1]}
-              >
-                <CameraCard
-                  cameraId={selectedPass.properties.id}
-                  fjell={selectedPass.properties.navn}
-                  weatherData={weatherData}
-                  weatherLoading={weatherLoading}
-                  weatherError={weatherError}
-                />
-              </Marker>
+              ></Marker>
             )}
             <MountainPassMapLines
               mountainPassId={mountainPassData.properties.id}
@@ -111,8 +103,26 @@ function MountainMap({
       ) : (
         <></>
       )}
+
+      {selectedPass && (
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+            overflowX: "hidden",
+          }}
+        >
+          <CameraCard
+            cameraId={selectedPass.properties.id}
+            fjell={selectedPass.properties.navn}
+            weatherData={weatherData}
+            weatherLoading={weatherLoading}
+            weatherError={weatherError}
+          />
+        </div>
+      )}
     </Map>
   );
 }
-
 export default MountainMap;
