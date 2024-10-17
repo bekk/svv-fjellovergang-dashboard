@@ -1,6 +1,6 @@
 import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
 import { predictions } from "../types/PredictionTypes";
-import { isToday, isTomorrow } from "../utils/dateCheckers";
+import { isToday, isTomorrow, nextTimeInterval } from "../utils/dateCheckers";
 import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
 
 const LAV = 0.2;
@@ -70,7 +70,7 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
             if (isToday(prediction.datetime)) {
               return (
                 <Stack key={index} direction={"row"} spacing={7}>
-                  <Typography>{prediction.datetime.split(" ")[1]}</Typography>
+                  <Typography>{prediction.datetime.split(" ")[1].slice(0, 5) + " - " + nextTimeInterval(prediction.datetime.split(" ")[1].slice(0, 2))}</Typography>
                   <Chip
                     label={prediction.prediction.toFixed(4)}
                     sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
@@ -103,3 +103,7 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
 }
 
 export default PrognoseCard;
+function elif(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
