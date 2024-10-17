@@ -1,5 +1,5 @@
 import { Layer } from "react-map-gl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MountainPassData } from "../../types/mountainPassTypes";
 import { buildGeoJsonFromClickedEvent } from "../../utils/buildGeoJson";
 
@@ -27,33 +27,35 @@ function MountainPassMapLines({
     green: "#3bc474",
   });
 
-  map.on("mouseenter", `click-layer-${mountainPassId}`, () => {
-    setHover(true);
-    setColors({
-      red: "#9e3c3c",
-      green: "#216e41",
+  useEffect(() => {
+    map.on("mouseenter", `click-layer-${mountainPassId}`, () => {
+      setHover(true);
+      setColors({
+        red: "#9e3c3c",
+        green: "#216e41",
+      });
     });
-  });
 
-  map.on("mouseleave", `click-layer-${mountainPassId}`, () => {
-    setHover(false);
-    setColors({
-      red: "#d65454",
-      green: "#3bc474",
+    map.on("mouseleave", `click-layer-${mountainPassId}`, () => {
+      setHover(false);
+      setColors({
+        red: "#d65454",
+        green: "#3bc474",
+      });
     });
-  });
 
-  map.on(
-    "click",
-    `click-layer-${mountainPassId}`,
-    (e: { features: string | any[] }) => {
-      const vectorTileFeature = e.features[0];
+    map.on(
+      "click",
+      `click-layer-${mountainPassId}`,
+      (e: { features: string | any[] }) => {
+        const vectorTileFeature = e.features[0];
 
-      const geojsonFeature = buildGeoJsonFromClickedEvent(vectorTileFeature);
-      console.log(geojsonFeature);
-      setSelectedPass(geojsonFeature);
-    }
-  );
+        const geojsonFeature = buildGeoJsonFromClickedEvent(vectorTileFeature);
+        console.log(geojsonFeature);
+        setSelectedPass(geojsonFeature);
+      }
+    );
+  }, []);
 
   return (
     <>
