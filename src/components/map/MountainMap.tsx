@@ -4,6 +4,8 @@ import { MountainPassData } from "../../types/mountainPassTypes";
 import { WeatherData } from "../../types/dataTypes";
 import CameraCard from "./CameraCard";
 import MountainPassMapLines from "./MountainPassMapLines";
+import { useEffect } from "react";
+import { useMapZoom } from "../../hooks/MapZoom";
 
 interface MountainMapProps {
   viewState: ViewState;
@@ -14,7 +16,9 @@ interface MountainMapProps {
   mountainpassData: MountainPassData[] | null;
   mountainpassLoading: boolean;
   selectedPass: MountainPassData | null;
-  finishedZoom: boolean;
+  setSelectedPass: React.Dispatch<
+    React.SetStateAction<MountainPassData | null>
+  >;
   weatherData: WeatherData | null;
   weatherLoading: boolean;
   weatherError: boolean;
@@ -33,11 +37,21 @@ function MountainMap({
   mountainpassData,
   mountainpassLoading,
   selectedPass,
-  finishedZoom,
+  setSelectedPass,
   weatherData,
   weatherLoading,
   weatherError,
 }: MountainMapProps) {
+  const { zoomTo, zoomOut, finishedZoom } = useMapZoom(mapRef);
+  useEffect(() => {
+    console.log(selectedPass);
+    if (selectedPass) {
+      zoomTo(selectedPass.properties.senter.coordinates);
+    } else {
+      zoomOut();
+    }
+  }, [selectedPass]);
+
   return (
     <Map
       {...viewState}
@@ -73,6 +87,8 @@ function MountainMap({
               mountainPassId={mountainPassData.properties.id}
               isMountainPassClosed={mountainPassData.properties.passability}
               loading={mountainpassLoading}
+              mapRef={mapRef}
+              setSelectedPass={setSelectedPass}
             />
           </Source>
         ))

@@ -17,7 +17,7 @@ import MountainPassList from "../components/MountainpassList";
 import MountainMap from "../components/map/MountainMap";
 import { ViewState } from "react-map-gl";
 
-const initialViewState: ViewState = {
+export const initialViewState: ViewState = {
   longitude: 8.4999235,
   latitude: 61.0502212,
   zoom: 6,
@@ -34,8 +34,6 @@ function MapPage() {
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
 
   const [showAll, setShowAll] = useState<boolean>(true);
-
-  const [finishedZoom, setFinishedZoom] = useState<boolean>(false);
 
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -80,36 +78,17 @@ function MapPage() {
     getWeatherData();
   }, [selectedPass]);
 
-  useEffect(() => {
-    if (mapRef.current) {
-      setFinishedZoom(false);
-      if (selectedPass) {
-        const [longitude, latitude] =
-          selectedPass.properties.senter.coordinates;
-        mapRef.current
-          .flyTo({
-            center: [longitude, latitude],
-            zoom: 10,
-            duration: 2000,
-          })
-          .once("moveend", () => setFinishedZoom(true));
-      } else {
-        mapRef.current.flyTo({
-          center: [initialViewState.longitude, initialViewState.latitude],
-          zoom: 6,
-          duration: 2000,
-        });
-        setWeatherData(null);
-      }
-    }
-  }, [selectedPass]);
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
         <div
-          style={{ flex: "1", height: "100vh", width: "100%", padding: "10px" }}
+          style={{
+            flex: "1",
+            height: "100vh",
+            width: "100%",
+            padding: "10px",
+          }}
         >
           <section
             style={{
@@ -153,7 +132,7 @@ function MapPage() {
           mountainpassData={individualGeojsons}
           mountainpassLoading={loadingFjelloverganger}
           selectedPass={selectedPass}
-          finishedZoom={finishedZoom}
+          setSelectedPass={setSelectedPass}
           weatherData={weatherData}
           weatherLoading={weatherLoading}
           weatherError={weatherError}

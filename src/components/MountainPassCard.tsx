@@ -18,10 +18,12 @@ function MountainPassCard({
   selectedPass,
 }: MountainPassCardProps) {
   const isOpen = selectedPass?.properties.id === data.properties.id;
-  const handleCardClick = () =>
+  const handleCardClick = () => {
+    console.log(selectedPass);
     selectPass((prevPass) =>
       prevPass && prevPass.properties.id === data.properties.id ? null : data
     );
+  };
 
   const {
     data: prediction,
@@ -88,7 +90,11 @@ function MountainPassCard({
         <Divider sx={{ marginTop: 2, opacity: 0.8 }} />
 
         <Typography variant="h6">Prognose</Typography>
-        <PrognoseCard id={data.properties.id} predictions={prediction} loading={predictionLoading} />
+        <PrognoseCard
+          id={data.properties.id}
+          predictions={prediction}
+          loading={predictionLoading}
+        />
       </Collapse>
     </Card>
   );
