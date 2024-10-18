@@ -33,8 +33,6 @@ function MapPage() {
     loading: loadingFjelloverganger,
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
 
-  const [showAll, setShowAll] = useState<boolean>(true);
-
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
@@ -105,12 +103,6 @@ function MapPage() {
             >
               {darkMode ? <LightMode /> : <DarkMode />}
             </IconButton>
-            <Typography>Vis alle fjelloverganger</Typography>
-            <Switch
-              checked={showAll}
-              onChange={() => setShowAll(!showAll)}
-              inputProps={{ "aria-label": "controlled" }}
-            />
           </section>
           {loadingFjelloverganger && (
             <Skeleton variant="rounded" height={"91vh"} />
@@ -128,7 +120,6 @@ function MapPage() {
           setViewState={setViewState}
           darkMode={darkMode}
           mapRef={mapRef}
-          showAll={showAll}
           mountainpassData={individualGeojsons}
           mountainpassLoading={loadingFjelloverganger}
           selectedPass={selectedPass}
