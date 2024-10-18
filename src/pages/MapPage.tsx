@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Switch, Typography, IconButton, Skeleton } from "@mui/material";
+import { IconButton, Skeleton } from "@mui/material";
 import { LightMode, DarkMode } from "@mui/icons-material";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -42,8 +42,6 @@ function MapPage() {
     error: parametersError,
     loading: parametersLoading,
   } = useFetch(fetchTrainingParameters);
-
-  const [showAll, setShowAll] = useState<boolean>(true);
 
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -115,12 +113,6 @@ function MapPage() {
             >
               {darkMode ? <LightMode /> : <DarkMode />}
             </IconButton>
-            <Typography>Vis alle fjelloverganger</Typography>
-            <Switch
-              checked={showAll}
-              onChange={() => setShowAll(!showAll)}
-              inputProps={{ "aria-label": "controlled" }}
-            />
           </section>
           {loadingFjelloverganger && (
             <Skeleton variant="rounded" height={"91vh"} />
@@ -140,7 +132,6 @@ function MapPage() {
           setViewState={setViewState}
           darkMode={darkMode}
           mapRef={mapRef}
-          showAll={showAll}
           mountainpassData={individualGeojsons}
           mountainpassLoading={loadingFjelloverganger}
           selectedPass={selectedPass}

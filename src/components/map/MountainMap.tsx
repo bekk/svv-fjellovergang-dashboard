@@ -12,7 +12,6 @@ interface MountainMapProps {
   setViewState: React.Dispatch<React.SetStateAction<ViewState>>;
   darkMode: boolean;
   mapRef: React.MutableRefObject<any>;
-  showAll: boolean;
   mountainpassData: MountainPassData[] | null;
   mountainpassLoading: boolean;
   selectedPass: MountainPassData | null;
@@ -33,7 +32,6 @@ function MountainMap({
   setViewState,
   darkMode,
   mapRef,
-  showAll,
   mountainpassData,
   mountainpassLoading,
   selectedPass,
@@ -42,7 +40,9 @@ function MountainMap({
   weatherLoading,
   weatherError,
 }: MountainMapProps) {
+
   const { zoomTo, zoomOut, finishedZoom } = useMapZoom(mapRef);
+  
   useEffect(() => {
     if (selectedPass) {
       zoomTo(selectedPass.properties.senter.coordinates);
@@ -60,8 +60,7 @@ function MountainMap({
       onMove={(e) => setViewState(e.viewState)}
       style={{ flex: "3", height: "100%", width: "100%" }}
     >
-      {showAll ? (
-        mountainpassData?.map((mountainPassData: MountainPassData) => (
+      {mountainpassData?.map((mountainPassData: MountainPassData) => (
           <Source
             id={mountainPassData.properties.id.toString()}
             type="geojson"
@@ -83,25 +82,7 @@ function MountainMap({
             />
           </Source>
         ))
-      ) : (
-        <></>
-      )}
-      {selectedPass && !showAll ? (
-        <Source id="mountain-pass-source" type="geojson" data={selectedPass}>
-          <Layer
-            id="mountain-pass-layer"
-            type="line"
-            layout={{ "line-cap": "round", "line-join": "round" }}
-            paint={
-              selectedPass.properties.strekningsType === "Fjellovergang"
-                ? { "line-color": "#FF9999", "line-width": 2 }
-                : { "line-color": "#99CCFF", "line-width": 2 }
-            }
-          />
-        </Source>
-      ) : (
-        <></>
-      )}
+      }
 
       {selectedPass && (
         <div
