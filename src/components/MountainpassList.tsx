@@ -1,6 +1,7 @@
 import { fetchTrainingParameters } from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { MountainPassData } from "../types/mountainPassTypes";
+import { parameters } from "../types/PredictionTypes";
 import MountainPassCard from "./MountainPassCard";
 
 interface MountainPassListProps {
@@ -9,19 +10,17 @@ interface MountainPassListProps {
   setSelectedPass: React.Dispatch<
     React.SetStateAction<MountainPassData | null>
   >;
+  parameters: parameters;
+  parametersLoading: boolean;
 }
 
 function MountainPassList({
   mountainPasses,
   selectedPass,
   setSelectedPass,
+  parameters,
+  parametersLoading,
 }: MountainPassListProps) {
-  const {
-    data: parameters,
-    error: parametersError,
-    loading: parametersLoading,
-  } = useFetch(fetchTrainingParameters);
-
   return (
     <nav
       style={{

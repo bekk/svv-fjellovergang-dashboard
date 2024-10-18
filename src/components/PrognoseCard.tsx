@@ -2,6 +2,7 @@ import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
 import { parameters, predictions } from "../types/PredictionTypes";
 import { isToday, isTomorrow, nextTimeInterval } from "../utils/dateCheckers";
 import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
+import { wrap } from "module";
 
 const LAV = 0.2;
 const MEDIUM = 0.5;
@@ -51,11 +52,11 @@ function PrognoseCard({
         Risiko for stenging av fjellovergangen på grunn av vær
       </Typography>
 
-      <Typography>
-        Følgende parameter har blitt brukt i denne prognosen
+      <Typography fontStyle="italic">
+        Følgende parameter har blitt brukt i denne prognosen:
       </Typography>
 
-      <Stack direction={"row"} spacing={1}>
+      <Stack direction={"row"} spacing={1} useFlexGap flexWrap="wrap">
         {parametersLoading ? (
           <Skeleton />
         ) : (
