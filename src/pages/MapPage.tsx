@@ -8,7 +8,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import { WeatherData } from "../types/dataTypes";
 
-import { fetchAllMountainPasses, fetchWeatherData } from "../api/api";
+import {
+  fetchAllMountainPasses,
+  fetchTrainingParameters,
+  fetchWeatherData,
+} from "../api/api";
 import useFetch from "../hooks/useFetch";
 import { buildIndividualGeoJson } from "../utils/buildGeoJson";
 
@@ -32,6 +36,12 @@ function MapPage() {
     error: geoError,
     loading: loadingFjelloverganger,
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
+
+  const {
+    data: parameters,
+    error: parametersError,
+    loading: parametersLoading,
+  } = useFetch(fetchTrainingParameters);
 
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -112,6 +122,8 @@ function MapPage() {
               mountainPasses={individualGeojsons}
               selectedPass={selectedPass}
               setSelectedPass={setSelectedPass}
+              parameters={parameters}
+              parametersLoading={parametersLoading}
             />
           )}
         </div>
