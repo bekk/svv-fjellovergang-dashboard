@@ -26,3 +26,7 @@ export const fetchWeatherData = (lat: number, lon: number) => {
 export const fetchPassabillity = (id: number) => {
   return apiClient.get(`/getCurrentPassability/${id}`);
 };
+
+export const fetchTrainingParameters = () => {
+  return apiClient.get("getTrainingParameters");
+};
