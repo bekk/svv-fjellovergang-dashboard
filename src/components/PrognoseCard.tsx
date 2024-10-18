@@ -1,7 +1,7 @@
 import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
-import { predictions } from "../types/PredictionTypes";
+import { parameters, predictions } from "../types/PredictionTypes";
 import { isToday, isTomorrow, nextTimeInterval } from "../utils/dateCheckers";
-import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
+import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
 
 const LAV = 0.2;
 const MEDIUM = 0.5;
@@ -10,6 +10,8 @@ interface ProgniseCardProps {
   id: number;
   predictions: predictions[];
   loading: boolean;
+  parameters: parameters;
+  parametersLoading: boolean;
 }
 
 const getPredictionColor = (prediction: number): string => {
@@ -27,20 +29,39 @@ interface IdToName {
 }
 
 const mountainPassIdNames: IdToName = {
-  91192878: "de11iq8bwnzlsb",     // Dovrefjell
-  638645987: "fdyg4nqolil1ce",    // Saltfjellet
-  915906244: "de11hkvh6x7uof",    // Haukelifjellet
-  761980521: "ee11ix6s6nrb4e",    // Hol - Aurland
-  81833493: "ee11iyx9l80zkc",     // Hardangervidda
-  79089974: "de11ikylzarcwb",     // Aurlandsfjellet
-  91141932: "fe11ivb8k05j4c"      // Geiranger - Langvatn
+  91192878: "de11iq8bwnzlsb", // Dovrefjell
+  638645987: "fdyg4nqolil1ce", // Saltfjellet
+  915906244: "de11hkvh6x7uof", // Haukelifjellet
+  761980521: "ee11ix6s6nrb4e", // Hol - Aurland
+  81833493: "ee11iyx9l80zkc", // Hardangervidda
+  79089974: "de11ikylzarcwb", // Aurlandsfjellet
+  91141932: "fe11ivb8k05j4c", // Geiranger - Langvatn
 };
 
-function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
-
+function PrognoseCard({
+  id,
+  predictions,
+  loading,
+  parameters,
+  parametersLoading,
+}: ProgniseCardProps) {
   return (
     <Stack spacing={2}>
-      <Typography>Risiko for stenging på grunn av vær</Typography>
+      <Typography>
+        Risiko for stenging av fjellovergangen på grunn av vær
+      </Typography>
+
+      <Typography>
+        Følgende parameter har blitt brukt i denne prognosen
+      </Typography>
+
+      {parametersLoading ? (
+        <Skeleton />
+      ) : (
+        parameters.inFeatures.map((parameter: string) => (
+          <Chip label={parameter} />
+        ))
+      )}
 
       <Typography
         component="a"
@@ -70,13 +91,23 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
             if (isToday(prediction.datetime)) {
               return (
                 <Stack key={index} direction={"row"} spacing={7}>
-                  <Typography>{prediction.datetime.split(" ")[1].slice(0, 5) + " - " + nextTimeInterval(prediction.datetime.split(" ")[1].slice(0, 2))}</Typography>
+                  <Typography>
+                    {prediction.datetime.split(" ")[1].slice(0, 5) +
+                      " - " +
+                      nextTimeInterval(
+                        prediction.datetime.split(" ")[1].slice(0, 2)
+                      )}
+                  </Typography>
                   <Chip
                     label={prediction.prediction.toFixed(4)}
-                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                    sx={{
+                      backgroundColor: getPredictionColor(
+                        prediction.prediction
+                      ),
+                    }}
                   />
                 </Stack>
-              )
+              );
             }
           })}
 
@@ -88,10 +119,14 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
                   <Typography>{prediction.datetime.split(" ")[1]}</Typography>
                   <Chip
                     label={prediction.prediction.toFixed(4)}
-                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                    sx={{
+                      backgroundColor: getPredictionColor(
+                        prediction.prediction
+                      ),
+                    }}
                   />
                 </Stack>
-              )
+              );
             }
           })}
         </>
@@ -106,4 +141,3 @@ export default PrognoseCard;
 function elif(arg0: boolean) {
   throw new Error("Function not implemented.");
 }
-

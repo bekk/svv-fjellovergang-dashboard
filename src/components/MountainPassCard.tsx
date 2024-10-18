@@ -13,17 +13,22 @@ import PrognoseCard from "./PrognoseCard";
 import { Dispatch, SetStateAction } from "react";
 import { fetchPrediction } from "../api/api";
 import useFetch from "../hooks/useFetch";
+import { parameters } from "../types/PredictionTypes";
 
 interface MountainPassCardProps {
   data: MountainPassData;
   selectPass: Dispatch<SetStateAction<MountainPassData | null>>;
   selectedPass: MountainPassData | null;
+  parameters: parameters;
+  parametersLoading: boolean;
 }
 
 function MountainPassCard({
   data,
   selectPass,
   selectedPass,
+  parameters,
+  parametersLoading,
 }: MountainPassCardProps) {
   const isOpen = selectedPass?.properties.id === data.properties.id;
   const handleCardClick = () => {
@@ -121,6 +126,8 @@ function MountainPassCard({
           id={data.properties.id}
           predictions={prediction}
           loading={predictionLoading}
+          parameters={parameters}
+          parametersLoading={parametersLoading}
         />
       </Collapse>
     </Card>

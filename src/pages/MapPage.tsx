@@ -37,12 +37,6 @@ function MapPage() {
     loading: loadingFjelloverganger,
   } = useFetch(fetchAllMountainPasses, buildIndividualGeoJson);
 
-  const {
-    data: parameters,
-    error: parametersError,
-    loading: parametersLoading,
-  } = useFetch(fetchTrainingParameters);
-
   const [showAll, setShowAll] = useState<boolean>(true);
 
   const [viewState, setViewState] = useState<ViewState>(initialViewState);
