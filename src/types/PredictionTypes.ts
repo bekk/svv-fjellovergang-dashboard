@@ -3,3 +3,7 @@ export type predictions = {
   prediction: number;
   prediction_time: string;
 };
+
+export type parameters = {
+  inFeatures: string[];
+};

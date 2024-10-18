@@ -1,7 +1,8 @@
 import { Divider, Typography, Stack, Chip, Skeleton } from "@mui/material";
-import { predictions } from "../types/PredictionTypes";
+import { parameters, predictions } from "../types/PredictionTypes";
 import { isToday, isTomorrow, nextTimeInterval } from "../utils/dateCheckers";
-import LaunchOutlinedIcon from '@mui/icons-material/LaunchOutlined';
+import LaunchOutlinedIcon from "@mui/icons-material/LaunchOutlined";
+import { wrap } from "module";
 
 const LAV = 0.2;
 const MEDIUM = 0.5;
@@ -10,6 +11,8 @@ interface ProgniseCardProps {
   id: number;
   predictions: predictions[];
   loading: boolean;
+  parameters: parameters;
+  parametersLoading: boolean;
 }
 
 const getPredictionColor = (prediction: number): string => {
@@ -22,11 +25,32 @@ const getPredictionColor = (prediction: number): string => {
   }
 };
 
-function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
-
+function PrognoseCard({
+  id,
+  predictions,
+  loading,
+  parameters,
+  parametersLoading,
+}: ProgniseCardProps) {
   return (
     <Stack spacing={2}>
-      <Typography>Risiko for stenging på grunn av vær</Typography>
+      <Typography>
+        Risiko for stenging av fjellovergangen på grunn av vær
+      </Typography>
+
+      <Typography fontStyle="italic">
+        Følgende parameter har blitt brukt i denne prognosen:
+      </Typography>
+
+      <Stack direction={"row"} spacing={1} useFlexGap flexWrap="wrap">
+        {parametersLoading ? (
+          <Skeleton />
+        ) : (
+          parameters.inFeatures.map((parameter: string) => (
+            <Chip label={parameter.replace(/_|mean/g, " ").trim()} />
+          ))
+        )}
+      </Stack>
 
       <Typography
         component="a"
@@ -56,13 +80,23 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
             if (isToday(prediction.datetime)) {
               return (
                 <Stack key={index} direction={"row"} spacing={7}>
-                  <Typography>{prediction.datetime.split(" ")[1].slice(0, 5) + " - " + nextTimeInterval(prediction.datetime.split(" ")[1].slice(0, 2))}</Typography>
+                  <Typography>
+                    {prediction.datetime.split(" ")[1].slice(0, 5) +
+                      " - " +
+                      nextTimeInterval(
+                        prediction.datetime.split(" ")[1].slice(0, 2)
+                      )}
+                  </Typography>
                   <Chip
                     label={prediction.prediction.toFixed(4)}
-                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                    sx={{
+                      backgroundColor: getPredictionColor(
+                        prediction.prediction
+                      ),
+                    }}
                   />
                 </Stack>
-              )
+              );
             }
           })}
 
@@ -74,10 +108,14 @@ function PrognoseCard({ id, predictions, loading }: ProgniseCardProps) {
                   <Typography>{prediction.datetime.split(" ")[1]}</Typography>
                   <Chip
                     label={prediction.prediction.toFixed(4)}
-                    sx={{ backgroundColor: getPredictionColor(prediction.prediction) }}
+                    sx={{
+                      backgroundColor: getPredictionColor(
+                        prediction.prediction
+                      ),
+                    }}
                   />
                 </Stack>
-              )
+              );
             }
           })}
         </>
