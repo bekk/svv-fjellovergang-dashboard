@@ -25,20 +25,6 @@ const getPredictionColor = (prediction: number): string => {
   }
 };
 
-interface IdToName {
-  [id: number]: string;
-}
-
-const mountainPassIdNames: IdToName = {
-  91192878: "de11iq8bwnzlsb", // Dovrefjell
-  638645987: "fdyg4nqolil1ce", // Saltfjellet
-  915906244: "de11hkvh6x7uof", // Haukelifjellet
-  761980521: "ee11ix6s6nrb4e", // Hol - Aurland
-  81833493: "ee11iyx9l80zkc", // Hardangervidda
-  79089974: "de11ikylzarcwb", // Aurlandsfjellet
-  91141932: "fe11ivb8k05j4c", // Geiranger - Langvatn
-};
-
 function PrognoseCard({
   id,
   predictions,
@@ -68,7 +54,7 @@ function PrognoseCard({
 
       <Typography
         component="a"
-        href={`https://gyda1210.grafana.net/d/${mountainPassIdNames[id]}`}
+        href={`https://grafana-1041777169352.europe-west1.run.app/d/be15ano9pawhsf/svv-fjelloverganger?orgId=1&var-fjellovergangID=${id}`}
         target="_blank"
         rel="noopener noreferrer"
         sx={{
@@ -141,6 +127,3 @@ function PrognoseCard({
 }
 
 export default PrognoseCard;
-function elif(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
