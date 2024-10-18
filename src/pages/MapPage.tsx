@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Switch, Typography, IconButton, Skeleton } from "@mui/material";
+import { IconButton, Skeleton } from "@mui/material";
 import { LightMode, DarkMode } from "@mui/icons-material";
 
 import { ThemeProvider, createTheme } from "@mui/material/styles";
