@@ -55,13 +55,15 @@ function PrognoseCard({
         Følgende parameter har blitt brukt i denne prognosen
       </Typography>
 
-      {parametersLoading ? (
-        <Skeleton />
-      ) : (
-        parameters.inFeatures.map((parameter: string) => (
-          <Chip label={parameter} />
-        ))
-      )}
+      <Stack direction={"row"} spacing={1}>
+        {parametersLoading ? (
+          <Skeleton />
+        ) : (
+          parameters.inFeatures.map((parameter: string) => (
+            <Chip label={parameter.replace(/_|mean/g, " ").trim()} />
+          ))
+        )}
+      </Stack>
 
       <Typography
         component="a"
